@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/signup_shop.css') }}"
+    />
+  </head>
+  <body>
+    <div class="page-wrapper">
+      <!-- Left Section -->
+      <div class="left-section">
+        <div class="login-container">
+          <div class="form-header"></div>
+
+          <form action="">
+            <div class="login-form">
+              <div class="input-group">
+                <input type="text" name="shop_name" placeholder="Shop name" />
+              </div>
+              <div class="input-group">
+                <input
+                  type="text"
+                  name="shop_category"
+                  placeholder="Shop Category"
+                />
+              </div>
+
+              <div class="input-group">
+                <input
+                  type="number"
+                  name="phone_number"
+                  placeholder="Phone number"
+                />
+              </div>
+
+              <!-- <div class="input-group">
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="Email address"
+                  autocomplete="email"
+                  required
+                />
+              </div> -->
+
+              <div class="input-group">
+                <input
+                  type="address"
+                  id="password"
+                  name="shop_address"
+                  placeholder="Shop address"
+                  required
+                />
+              </div>
+
+              <button type="submit" class="login-btn">Sign up</button>
+
+              <div class="signup-link">
+                <a href="#" id="signupRedirectLink">
+                  Already login? Click me!
+                </a>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Right Section -->
+      <div class="right-section">
+        <div class="image_container">
+          <img
+            style="
+              border-top-left-radius: 10px;
+              border-bottom-left-radius: 10px;
+              border-bottom-right-radius: 0px;
+              border-top-right-radius: 0px;
+            "
+            id="login_page_image"
+            src="{{ url_for('static', filename='IMG/shop_signup.jpg') }}"
+            alt="Signup image"
+          />
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

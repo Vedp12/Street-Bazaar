@@ -1,0 +1,247 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  /* background-color: #f4f6fb; */
+}
+
+/* ── Navbar ── */
+
+.tux-nav {
+  width: 100%;
+  background-color: #056fd3;
+  border-bottom: 2px solid #3a5bbf;
+}
+
+.tux-nav__list {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  width: 100%;
+  height: 60px;
+  padding: 0 20px;
+  gap: 12px;
+}
+
+/* Pushes right-side items to the far end */
+.tux-nav__spacer {
+  flex: 1;
+}
+
+.tux-nav__item {
+  display: flex;
+  align-items: center;
+}
+
+/* ── Logo ── */
+
+.tux-nav__logo-img {
+  height: 39px;
+  border-radius: 50%;
+  display: block;
+}
+
+/* ── Search ── */
+
+.tux-nav__search-wrap {
+  flex: 0 0 auto;
+}
+
+.tux-search-container {
+  height: 38px;
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  padding-left: 14px;
+  width: 340px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+}
+
+.tux-search-input {
+  flex: 1;
+  height: 100%;
+  border: none;
+  outline: none;
+  font-size: 0.9em;
+  caret-color: rgb(255, 81, 0);
+  background: transparent;
+}
+
+.tux-search-label {
+  cursor: pointer;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+}
+
+.tux-search-icon {
+  width: 14px;
+}
+
+.tux-search-icon path {
+  fill: rgb(114, 114, 114);
+}
+
+/* ── Generic icon button ── */
+
+.tux-icon-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+
+.tux-icon-btn:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.tux-icon-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* ── Dropdown (hover-based) ── */
+
+.tux-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.tux-dropdown__btn {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.25s;
+}
+
+.tux-dropdown__btn:hover {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.tux-dropdown__btn:focus {
+  outline: 2px solid rgba(255, 255, 255, 0.6);
+  outline-offset: 2px;
+}
+
+.tux-dropdown__btn svg {
+  width: 22px;
+  height: 22px;
+}
+
+.tux-dropdown__menu {
+  display: block;
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  background-color: #fff;
+  min-width: 160px;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  /* Hover-based show/hide */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-6px);
+  transition:
+    opacity 0.22s ease,
+    transform 0.22s ease,
+    visibility 0.22s;
+}
+
+/* Show on hovering the dropdown container */
+.tux-dropdown:hover .tux-dropdown__menu {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* Small bridge so cursor can travel between button and menu */
+.tux-dropdown__menu::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 0;
+  right: 0;
+  height: 10px;
+}
+
+.tux-dropdown__item {
+  color: #333;
+  padding: 11px 16px;
+  text-decoration: none;
+  display: block;
+  font-size: 0.92em;
+  transition: background-color 0.18s;
+}
+
+.tux-dropdown__item:first-child {
+  border-radius: 10px 10px 0 0;
+}
+
+.tux-dropdown__item:last-child {
+  border-radius: 0 0 10px 10px;
+}
+
+.tux-dropdown__item:hover {
+  background-color: #f0f4ff;
+  color: #056fd3;
+}
+
+/* ── Profile button ── */
+
+.tux-profile-btn {
+  background: none;
+  /* border: 2px solid rgba(255, 255, 255, 0.5); */
+  border-radius: 50%;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s;
+}
+
+.tux-profile-btn:hover {
+  border-color: #fff;
+}
+
+.tux-profile-img {
+  height: 36px;
+  width: 36px;
+  border-radius: 50%;
+  display: block;
+  object-fit: cover;
+}
+
+/* ── Body ── */
+
+.tux-main {
+  padding: 40px;
+}
+
+.tux-main h1 {
+  font-size: 2rem;
+  color: #121314;
+  font-weight: 600;
+}

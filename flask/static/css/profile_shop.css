@@ -1,0 +1,119 @@
+body {
+  background-color: #f0f6fc;
+  font-family: Arial, sans-serif;
+}
+
+.main_container {
+  display: flex;
+  background-color: #056fd3;
+  height: 4rem;
+  align-items: center; /* Center vertically */
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.enter-button {
+  height: 3rem;
+  margin: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 18px;
+  gap: 25px;
+  font-size: 0.7em;
+  letter-spacing: 2px;
+  color: white;
+  cursor: pointer;
+  background: #0460b6;
+  position: relative;
+  border-radius: 8px;
+  border: 1px solid #4d6bfe;
+  transition-duration: 0.3s;
+}
+
+.arrow {
+  height: 20px;
+}
+
+.enter-button:hover {
+  transition-duration: 0.3s;
+  box-shadow:
+    0px 0px 2px rgb(185, 185, 185),
+    0px 0px 10px #1284ef;
+}
+
+.enter-button:active {
+  transform: scale(0.95);
+}
+
+.tab-container {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #056fd3;
+  border-radius: 0.5625rem;
+  padding: 0.25rem;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.indicator {
+  width: 33%;
+  height: 2.5rem;
+  background: #2a84da;
+  position: absolute;
+  top: 0.25rem;
+  left: 0.25rem;
+  z-index: 9;
+  border: 0.03125rem solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 0.1875rem 0.5rem rgba(0, 0, 0, 0.12),
+              0 0.1875rem 0.0625rem rgba(0, 0, 0, 0.04);
+  border-radius: 0.4375rem;
+  transition: all 0.3s ease-out;
+}
+
+.tab {
+  flex: 1;
+  height: 2.5rem;
+  position: absolute;
+  z-index: 99;
+  outline: none;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.tab_label {
+  flex: 1;
+  height: 2.5rem;
+  position: relative;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #fff;
+  opacity: 0.85;
+  cursor: pointer;
+  border-radius: 0.4375rem;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+  text-align: center; /* Ensure text is centered */
+  line-height: 1; /* Prevent extra spacing */
+}
+
+.tab_label svg {
+  width: 1.2rem;
+  height: 1.2rem;
+  flex-shrink: 0; /* Prevent SVG from shrinking */
+}
+
+.tab_label:hover {
+  background-color: #62a3f7;
+  opacity: 1;
+}
+
+.tab--1:checked ~ .indicator { left: 0.25rem; }
+.tab--2:checked ~ .indicator { left: calc(33% + 0.25rem); }
+.tab--3:checked ~ .indicator { left: calc(66% + 0.25rem); }

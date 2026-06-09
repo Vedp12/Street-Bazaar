@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/login.css')}}"
+    />
+  </head>
+  <body>
+    <div>
+      <div class="image_container">
+        <img
+          id="login_page_image"
+          src="{{ url_for('static',filename='IMG/loginpage.jpeg')}}"
+          alt=""
+        />
+      </div>
+      <div class="login-container">
+        <div class="form-header">
+          <h1 style="font-weight: 900">Welcome back</h1>
+          <!-- <p>Sign in to your account</p> -->
+        </div>
+        <form style="background-color: #ffffff" action="">
+          <div style="background-color: #ffffff" class="login-form">
+            <!-- Email input -->
+            <div class="input-group" style="background-color: #ffffff">
+              <i class="fas fa-envelope"></i>
+              <input
+                style="background-color: #ffffff"
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Email address"
+                autocomplete="email"
+                required
+              />
+            </div>
+
+            <!-- Password input -->
+            <div class="input-group" style="background-color: #ffffff">
+              <i class="fas fa-lock"></i>
+              <input
+                type="password"
+                style="background-color: #ffffff"
+                id="password"
+                name="password"
+                placeholder="Password"
+                autocomplete="current-password"
+                required
+              />
+            </div>
+
+            <!-- Login Button with #007bff -->
+            <button class="login-btn" id="loginBtn">
+              <i class="fas fa-arrow-right-to-bracket"></i>
+              Sign in
+            </button>
+
+            <div class="signup-link" style="background-color: #ffffff">
+              <a
+                href="#"
+                id="signupRedirectLink"
+                style="background-color: #ffffff"
+              >
+                <i class="fas fa-user-plus"></i> Don't have an account? Click
+                me!
+              </a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

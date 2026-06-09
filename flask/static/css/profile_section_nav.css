@@ -1,0 +1,108 @@
+body {
+  background-color: #f0f6fc;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.main_container {
+  display: flex;
+  background-color: #056fd3;
+  height: 4.5rem;
+  align-items: center;
+  width: 100%;
+  /* max-width: 600px; */
+  /* margin: 0 auto 1rem; */
+  /* border-radius: 0.5625rem; */
+  padding: 0.25rem;
+  position: relative;
+}
+
+.enter-button {
+  height: 3rem;
+  margin: 0 20px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 18px;
+  gap: 25px;
+  font-size: 0.7em;
+  letter-spacing: 2px;
+  color: white;
+  cursor: pointer;
+  background: #0460b6;
+  border-radius: 8px;
+  border: 1px solid #4d6bfe;
+  transition: all 0.3s ease;
+}
+
+.arrow {
+  height: 20px;
+}
+
+.enter-button:hover {
+  box-shadow:
+    0px 0px 2px rgb(185, 185, 185),
+    0px 0px 10px #1284ef;
+}
+
+.enter-button:active {
+  transform: scale(0.95);
+}
+
+/* Tab buttons styling */
+.tab {
+  flex: 1;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #fff;
+  opacity: 0.85;
+  cursor: pointer;
+  border-radius: 0.4375rem;
+  transition: all 0.2s ease;
+  background: transparent;
+  border: none;
+  position: relative;
+  z-index: 1;
+  padding: 0;
+  margin: 0;
+}
+
+.tab svg {
+  width: 1.2rem;
+  height: 1.2rem;
+  flex-shrink: 0;
+}
+
+.tab:hover {
+  background-color: #62a3f7;
+  opacity: 1;
+}
+.tab:active{
+  background-color: #2a84da;
+
+}
+/* Active tab styling */
+
+/* Anchor tag styling inside buttons */
+.navbar_anchor {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: inherit;
+  text-decoration: none;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+/* Ensure the anchor tag fills the button */
+.tab .navbar_anchor {
+  flex: 1;
+}

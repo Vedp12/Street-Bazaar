@@ -1,0 +1,337 @@
+.section_contaiener {
+  display: flex;
+  /* width: 90%; */
+  /* max-width: 1200px; */
+  /* margin: 1rem auto; */
+  background: white;
+  /* border-radius: 15px; */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  height: 57rem;
+}
+
+/* Sidebar Navigation */
+.side_bar_nav {
+  width: 30%;
+  background: linear-gradient(135deg, #49a2ef, #1e3c72);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+}
+
+.sidenav {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Profile Container */
+.profile_container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+}
+
+#profile_image {
+  margin-top: 1rem;
+  border-radius: 50%;
+  height: 14rem;
+  width: 14rem;
+  border: 8px solid rgba(255, 255, 255, 0.3);
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.profile_name {
+  font-size: 2rem;
+  margin-top: 1rem;
+  color: white;
+  font-weight: 600;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.profile-progress {
+  background: rgba(255, 255, 255, 0.1);
+
+  padding: 1.5rem;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 55%;
+  margin-top: 5rem;
+  color: white;
+}
+
+.profile-progress h2 {
+  margin-top: 0;
+  font-size: 1.2rem;
+  color: white;
+}
+
+.progress-circle {
+  width: 13rem;
+  height: 13rem;
+  border-radius: 50%;
+  background: conic-gradient(#4caf50 0% 75%, #ddd 75% 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem auto;
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #000000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+#progressInput {
+  margin-top: 1rem;
+  padding: 0.5rem;
+  width: 60px;
+  text-align: center;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+/* Main Body */
+.main_body {
+  width: 70%;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 0 15px 15px 0;
+}
+
+.Identity {
+  margin-top: 0;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #1e3c72;
+  display: block;
+}
+
+.edit_Btn {
+  margin-left: auto;
+  margin-top: 0.5rem;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 120px;
+  height: 40px;
+  border: none;
+  padding: 0 1rem;
+  background: linear-gradient(135deg, #115fcb, #2575fc);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.edit_Btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.svg {
+  width: 16px;
+  height: 16px;
+  fill: white;
+}
+
+/* Info Section */
+.info-section {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: rgba(240, 248, 255, 0.5);
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+.share-section {
+  height: 12rem;
+}
+
+.info-section h3 {
+  color: #1e3c72;
+  margin-top: 0;
+}
+
+.info-section p {
+  margin: 0.5rem 0;
+  color: #555;
+}
+
+.input-data {
+  font-size: 1.5rem;
+  color: #4b6279;
+  font-weight: 800;
+}
+#userName {
+  margin-left: 6rem;
+}
+#userEmail {
+  margin-left: 9rem;
+}
+#userPhone {
+  margin-left: 2.6rem;
+}
+#userAge {
+  margin-left: 10.3rem;
+}
+#userShop {
+  margin-left: 5rem;
+}
+.User-data {
+  border-color: #007bff;
+  border-radius: 0.4rem;
+  /* box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); */
+  padding: 0.2rem 0.5rem 0.2rem 0.5rem;
+  background-color: #f0f6f9;
+  color: #1f2430;
+  font-weight: 700;
+  font-size: 1.8rem;
+  /* margin-left: 5rem; */
+  /* text-align: end; */
+}
+/* Responsive Design */
+@media (max-width: 768px) {
+  .section_contaiener {
+    flex-direction: column;
+
+    width: 100%;
+  }
+
+  .side_bar_nav {
+    width: 100%;
+    padding: 1rem;
+  }
+
+  .main_body {
+    width: 100%;
+    border-radius: 0;
+  }
+
+  .tab {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+}
+/* Card Container */
+.card {
+  width: fit-content;
+  height: fit-content;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  gap: 20px;
+}
+
+/* Base Social Container (Default State) */
+.socialContainer {
+  width: 52px;
+  height: 52px;
+  background-color: #e9e8f7; /* Required Default Background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border-radius: 14px;
+  text-decoration: none;
+}
+
+/* Sizing and Alignment for SVGs */
+.socialSvg {
+  width: 20px;
+  height: 20px;
+  transition: all 0.3s ease;
+}
+
+/* Default Colors: Fill vs Stroke */
+.fillIcon path {
+  fill: #0f172a;
+  transition: fill 0.3s ease;
+}
+
+.strokeIcon path {
+  stroke: #0f172a;
+  fill: none; /* Crucial so the inner path doesn't turn black */
+  transition: stroke 0.3s ease;
+}
+
+/* --- Hover States (Native App Colors & Shadows) --- */
+
+.socialContainer.instagram:hover {
+  background: linear-gradient(135deg, #f58529 0%, #dd2a7b 50%, #8134af 100%);
+  box-shadow: 0 10px 24px rgba(221, 42, 123, 0.28);
+  transform: translateY(-3px) scale(1.05); /* Slight lift and scale */
+}
+
+.socialContainer.whatsapp:hover {
+  background: linear-gradient(135deg, #25d366 0%, #1faa59 100%);
+  box-shadow: 0 10px 24px rgba(37, 211, 102, 0.28);
+  transform: translateY(-3px) scale(1.05);
+}
+
+.socialContainer.mail:hover {
+  background: linear-gradient(135deg, #fbbc05 0%, #ea4335 100%);
+  box-shadow: 0 10px 24px rgba(234, 67, 53, 0.22);
+  transform: translateY(-3px) scale(1.05);
+}
+
+.socialContainer.download:hover {
+  background: linear-gradient(135deg, #0f172a 0%, #3b82f6 100%);
+  box-shadow: 0 10px 24px rgba(59, 130, 246, 0.24);
+  transform: translateY(-3px) scale(1.05);
+}
+.socialContainer.Copy:hover {
+  background: linear-gradient(
+    135deg,
+    rgb(1, 177, 177) 0%,
+    rgb(0, 105, 105) 100%
+  );
+  /* box-shadow: 0 10px 24px rgb(2, 153, 153); */
+  transform: translateY(-3px) scale(1.05);
+}
+/* --- Icon Hover Colors (Pure White) --- */
+
+.socialContainer:hover .fillIcon path {
+  fill: #ffffff;
+}
+
+.socialContainer:hover .strokeIcon path {
+  stroke: #ffffff;
+}
+
+/* --- Animations --- */
+
+.socialContainer:hover .socialSvg {
+  animation: slide-in-top 0.3s both;
+}
+
+.socialContainer:active {
+  transform: scale(0.95);
+  transition-duration: 0.2s;
+}
+
+@keyframes slide-in-top {
+  0% {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

@@ -1,0 +1,218 @@
+ * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: system-ui, "Segoe UI", "Inter", "Helvetica Neue", sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(145deg, #eef2f7 0%, #d9e2ec 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+/* main card container - clean & elevated (no script) */
+.add-product-card {
+  max-width: 520px;
+  width: 80%;
+  background: white;
+  border-radius: 2rem;
+  box-shadow:
+    0 25px 45px -12px rgba(0, 0, 0, 0.25),
+    0 8px 18px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: transform 0.2s ease;
+}
+
+.add-product-card:hover {
+  transform: translateY(-3px);
+}
+
+.form-header {
+  background: #4094e2;
+  padding: 1.4rem 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.form-header h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  color: #0a2b3a;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.form-header h2::before {
+  
+  font-size: 1.6rem;
+  font-weight: 100;
+}
+
+.form-header p {
+  color: #000000;
+  margin-top: 0.5rem;
+  font-weight: 500;
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+
+/* form styling - No JavaScript, pure HTML/CSS with GET/POST behavior */
+.product-form {
+  padding: 2rem 2rem 1.8rem 2rem;
+}
+
+/* input groups */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.6rem;
+}
+
+.input-group label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #1f3e48;
+  letter-spacing: -0.2px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.required-star {
+  color: #e16a5c;
+  font-size: 1rem;
+}
+
+/* common input style */
+.input-group input,
+.input-group .readonly-tag {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  font-size: 1rem;
+  border-radius: 1.2rem;
+  border: 1.5px solid #e2edf2;
+  background: #fefefe;
+  transition: all 0.2s;
+  outline: none;
+  font-weight: 500;
+  color: #1a2e38;
+}
+
+.input-group input:focus {
+  border-color: #056fd3;
+  box-shadow: 0 0 0 3px rgba(147, 211, 237, 0.25);
+  background: white;
+}
+
+/* readonly field special style (tag) - fully readonly, no JS */
+.readonly-tag {
+  background: #f0f9fe;
+  border-color: #cde9f3;
+  color: #1e5e74;
+  font-weight: 500;
+  cursor: default;
+  letter-spacing: 0.3px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 1rem;
+  border-radius: 1.2rem;
+  border: 1.5px solid #cde9f3;
+}
+
+.tag-badge {
+  background: #cae5f0;
+  padding: 0.2rem 0.7rem;
+  border-radius: 30px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #0b4b60;
+  margin-left: 8px;
+}
+
+/* dual row for price & company */
+.row-dual {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.row-dual .input-group {
+  flex: 1;
+  min-width: 130px;
+}
+
+/* Saved button - primary blue #93d3ed with "Saved" text */
+.save-btn {
+  background: #4094e2;
+  border: none;
+  width: 100%;
+  padding: 1rem 1.2rem;
+  border-radius: 2.5rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #000000;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 5px 12px rgba(147, 211, 237, 0.4);
+  letter-spacing: 0.3px;
+  font-family: inherit;
+}
+
+.save-btn:hover {
+  background: #127bdd;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 18px rgba(147, 211, 237, 0.5);
+}
+
+.save-btn:active {
+  transform: translateY(1px);
+}
+
+/* success / info message area (no script, but we'll use <output> or paragraph that updates via GET params) */
+.feedback-area {
+  margin-top: 1.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 1.5rem;
+  background: #f1f9fe;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #0e4b60;
+  transition: all 0.1s;
+  border-left: 4px solid #93d3ed;
+}
+
+.feedback-success {
+  background: #e0f7ea;
+  color: #1d6f3f;
+  border-left: 4px solid #2ba150;
+}
+
+.feedback-error {
+  background: #ffeae9;
+  color: #bc3f31;
+  border-left: 4px solid #e05a4a;
+}
+
+.note {
+  font-size: 0.7rem;
+  text-align: center;
+  color: #6f8f9c;
+  margin-top: 1.2rem;
+  border-top: 1px dashed #cde3ec;
+  padding-top: 1rem;
+}
