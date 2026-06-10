@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Infinite Image Slider</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background: #000;
+      color: #fff;
+      font-family: sans-serif;
+    }
+    .container {
+      width: 100%;
+      height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+    .slider {
+      display: flex;
+      height: 100%;
+      transition: transform 1s ease;
+    }
+    .slider img {
+      min-width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .thumbnails {
+      position: absolute;
+      bottom: 10px;
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+    .thumbnails img {
+      width: 100px;
+      height: 80px;
+      margin: 10px;
+      border: 2px solid #fff;
+      border-radius: 4px;
+      transition: 0.5s;
+      cursor: pointer;
+    }
+    .thumbnails img:hover {
+      transform: scale(1.3);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="slider" id="slider">
+      <img src="1.png" alt="">
+      <img src="2.png" alt="">
+      <img src="3.jpg" alt="">
+      <img src="4.png" alt="">
+      <img src="5.jpg" alt="">
+    </div>
+    <div class="thumbnails">
+      <img src="1.png" alt="">
+      <img src="2.png" alt="">
+      <img src="3.jpg" alt="">
+      <img src="4.png" alt="">
+      <img src="5.jpg" alt="">
+    </div>
+  </div>
+
+  <script>
+    const slider = document.getElementById('slider');
+    const thumbnails = document.querySelectorAll('.thumbnails img');
+    let index = 0;
+
+    // Auto slide
+    function slide() {
+      index++;
+      if (index >= slider.children.length) {
+        index = 0;
+      }
+      slider.style.transform = `translateX(-${index * 100}%)`;
+    }
+    setInterval(slide, 3000);
+
+    // Thumbnail click
+    thumbnails.forEach((thumb, i) => {
+      thumb.addEventListener('click', () => {
+        index = i;
+        slider.style.transform = `translateX(-${index * 100}%)`;
+      });
+    });
+  </script>
+</body>
+</html>

@@ -7,7 +7,7 @@ IMG_FOLDER = os.path.join("static", "IMG")
 
 app.config["UPLOAD_FOLDER"] = IMG_FOLDER
 
-@app.route('/')
+@app.route('/data')
 def landing():
     landin_png = os.path.join(app.config["UPLOAD_FOLDER"], "landingpage_item.png")
     return render_template("landing.html",user_image=landin_png)
@@ -42,7 +42,7 @@ def inventory_add_product():
 def profile_name():
     return render_template("profile_name.html")
 
-@app.route('/profile_shop')
+@app.route('/')
 def profile_shop():
     return render_template('profile_shop.html')
 
