@@ -3,66 +3,43 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login</title>
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/signup_shop.css') }}"
-    />
+    <title>Shop Sign Up</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/signup_shop.css') }}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
   </head>
   <body>
     <div class="page-wrapper">
-      <!-- Left Section -->
+      
       <div class="left-section">
         <div class="login-container">
-          <div class="form-header"></div>
+          <div class="form-header">
+            <h1>Register Shop</h1>
+            <p>Setup your shop profile to get started</p>
+          </div>
 
-          <form action="">
+          <form action="" method="POST">
             <div class="login-form">
               <div class="input-group">
-                <input type="text" name="shop_name" placeholder="Shop name" />
+                <input type="text" name="shop_name" placeholder="Shop name" required />
               </div>
+              
               <div class="input-group">
-                <input
-                  type="text"
-                  name="shop_category"
-                  placeholder="Shop Category"
-                />
+                <input type="text" name="shop_category" placeholder="Shop Category" required />
               </div>
 
               <div class="input-group">
-                <input
-                  type="number"
-                  name="phone_number"
-                  placeholder="Phone number"
-                />
+                <input type="number" name="phone_number" placeholder="Phone number" required />
               </div>
 
-              <!-- <div class="input-group">
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  placeholder="Email address"
-                  autocomplete="email"
-                  required
-                />
-              </div> -->
-
               <div class="input-group">
-                <input
-                  type="address"
-                  id="password"
-                  name="shop_address"
-                  placeholder="Shop address"
-                  required
-                />
+                <input type="text" id="address" name="shop_address" placeholder="Shop address" required />
               </div>
 
               <button type="submit" class="login-btn">Sign up</button>
 
               <div class="signup-link">
                 <a href="#" id="signupRedirectLink">
-                  Already login? Click me!
+                  Already have an account? Log In
                 </a>
               </div>
             </div>
@@ -70,22 +47,16 @@
         </div>
       </div>
 
-      <!-- Right Section -->
       <div class="right-section">
         <div class="image_container">
           <img
-            style="
-              border-top-left-radius: 10px;
-              border-bottom-left-radius: 10px;
-              border-bottom-right-radius: 0px;
-              border-top-right-radius: 0px;
-            "
             id="login_page_image"
             src="{{ url_for('static', filename='IMG/shop_signup.jpg') }}"
-            alt="Signup image"
+            alt="Signup visual illustration"
           />
         </div>
       </div>
+
     </div>
   </body>
 </html>

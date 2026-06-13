@@ -1,23 +1,8 @@
- * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: system-ui, "Segoe UI", "Inter", "Helvetica Neue", sans-serif;
-}
 
-body {
-  min-height: 100vh;
-  background: linear-gradient(145deg, #eef2f7 0%, #d9e2ec 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1.5rem;
-}
-
-/* main card container - clean & elevated (no script) */
 .add-product-card {
-  max-width: 520px;
-  width: 80%;
+  max-width: 560px;
+  width: min(100%, 100%);
+  margin: 0 auto;
   background: white;
   border-radius: 2rem;
   box-shadow:
@@ -38,7 +23,7 @@ body {
 }
 
 .form-header h2 {
-  font-size: 1.8rem;
+  font-size: clamp(1.4rem, 2.2vw, 1.8rem);
   font-weight: 700;
   letter-spacing: -0.3px;
   color: #0a2b3a;
@@ -49,7 +34,6 @@ body {
 }
 
 .form-header h2::before {
-  
   font-size: 1.6rem;
   font-weight: 100;
 }
@@ -62,12 +46,10 @@ body {
   opacity: 0.85;
 }
 
-/* form styling - No JavaScript, pure HTML/CSS with GET/POST behavior */
 .product-form {
-  padding: 2rem 2rem 1.8rem 2rem;
+  padding: 2rem 2rem 1.8rem;
 }
 
-/* input groups */
 .input-group {
   display: flex;
   flex-direction: column;
@@ -83,6 +65,7 @@ body {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .required-star {
@@ -90,9 +73,9 @@ body {
   font-size: 1rem;
 }
 
-/* common input style */
 .input-group input,
-.input-group .readonly-tag {
+.input-group .readonly-tag,
+.readonly-tag-input {
   width: 100%;
   padding: 0.9rem 1rem;
   font-size: 1rem;
@@ -111,20 +94,21 @@ body {
   background: white;
 }
 
-/* readonly field special style (tag) - fully readonly, no JS */
-.readonly-tag {
+.readonly-tag,
+.readonly-tag-input {
   background: #f0f9fe;
   border-color: #cde9f3;
   color: #1e5e74;
   font-weight: 500;
   cursor: default;
   letter-spacing: 0.3px;
+}
+
+.readonly-tag {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0.9rem 1rem;
-  border-radius: 1.2rem;
-  border: 1.5px solid #cde9f3;
 }
 
 .tag-badge {
@@ -137,7 +121,6 @@ body {
   margin-left: 8px;
 }
 
-/* dual row for price & company */
 .row-dual {
   display: flex;
   gap: 1rem;
@@ -145,11 +128,10 @@ body {
 }
 
 .row-dual .input-group {
-  flex: 1;
-  min-width: 130px;
+  flex: 1 1 220px;
+  min-width: 0;
 }
 
-/* Saved button - primary blue #93d3ed with "Saved" text */
 .save-btn {
   background: #4094e2;
   border: none;
@@ -182,7 +164,6 @@ body {
   transform: translateY(1px);
 }
 
-/* success / info message area (no script, but we'll use <output> or paragraph that updates via GET params) */
 .feedback-area {
   margin-top: 1.5rem;
   padding: 0.75rem 1rem;
@@ -215,4 +196,76 @@ body {
   margin-top: 1.2rem;
   border-top: 1px dashed #cde3ec;
   padding-top: 1rem;
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 0.75rem;
+  }
+
+  .add-product-card {
+    border-radius: 1.5rem;
+  }
+
+  .form-header,
+  .product-form {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+
+  .save-btn {
+    font-size: 1.05rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .add-product-card {
+    border-radius: 1.25rem;
+  }
+
+  .form-header {
+    padding: 1rem 1.1rem;
+  }
+
+  .product-form {
+    padding: 1.1rem;
+  }
+
+  .input-group {
+    margin-bottom: 1.1rem;
+  }
+
+  .row-dual {
+    gap: 0;
+  }
+
+  .row-dual .input-group {
+    flex-basis: 100%;
+  }
+
+  .save-btn {
+    padding: 0.9rem 1rem;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 400px) {
+  body {
+    padding: 0.5rem;
+  }
+
+  .add-product-card {
+    border-radius: 1rem;
+  }
+
+  .form-header h2 {
+    font-size: 1.3rem;
+  }
+
+  .input-group input,
+  .input-group .readonly-tag,
+  .readonly-tag-input {
+    font-size: 0.95rem;
+    padding: 0.85rem 0.9rem;
+  }
 }
