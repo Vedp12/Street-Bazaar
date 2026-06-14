@@ -1,292 +1,201 @@
-{% extends "nav.html" %} {% block links %}
+{% extends "nav.html" %} 
+{% block links %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/nav.css') }}" />
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/inventory.css') }}"
-/>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/inventory.css') }}" />
 <link
   rel="stylesheet"
   href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
   integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
   crossorigin="anonymous"
 />
+{% endblock %} 
 
-{% endblock %} {% block main_page %}
-<button class="enter-button">
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 40 27"
-    class="arrow"
-  >
-    <line stroke-width="2" stroke="white" y2="14" x2="40" y1="14" x1="1"></line>
-    <line
-      stroke-width="2"
-      stroke="white"
-      y2="1.41537"
-      x2="10.4324"
-      y1="14.2433"
-      x1="1.18869"
-    ></line>
-    <line
-      stroke-width="2"
-      stroke="white"
-      y2="13.6007"
-      x2="1.20055"
-      y1="26.2411"
-      x1="10.699"
-    ></line>
-    <line
-      stroke="white"
-      y2="14.3133"
-      x2="1.07325"
-      y1="13.6334"
-      x1="0.33996"
-    ></line>
-    <line stroke-width="2" stroke="white" y2="13" x2="39" y1="8" x1="39"></line>
-  </svg>
+{% block main_page %}
+<div class="inventory-container">
   
-</button>
+  <div class="inventory-header-actions">
+    <button class="enter-button" aria-label="Go back" onclick="window.history.back();">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="arrow-icon">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      </svg>
+    </button>
 
+    <div class="tab-navigation">
+      <button class="tablinks active" onclick="openTab(event, 'Products')">Products</button>
+      <button class="tablinks" onclick="openTab(event, 'Peoples')">People</button>
+    </div>
+  </div>
 
-<div class="tab">
-  <button class="tablinks" onclick="openTab(event, 'Products')">Products</button>
-  <button class="tablinks" onclick="openTab(event, 'Peoples')">Peoples</button>
-</div>
+  <div id="Products" class="tabcontent">
+    <div class="table-action-bar">
+      <h2 class="section-title">Product Inventory</h2>
+      <button class="add_sign_Btn" aria-label="Add new product">
+        <span class="add_profile_sign">+</span>
+      </button>
+    </div>
+    
+    <div class="table-responsive custom-table-container">
+      <table class="table table-hover standard-inventory-table">
+        <thead>
+          <tr>
+            <th scope="col" style="width: 70px;">No</th>
+            <th scope="col">Product Name</th>
+            <th scope="col">Category</th>
+            <th scope="col">Price</th>
+            <th scope="col">Company</th>
+            <th scope="col" style="width: 130px;">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td class="font-weight-bold">git</td>
+            <td><span class="badge badge-subtle">software</span></td>
+            <td>₹0</td>
+            <td>opensource</td>
+            <td>
+              <div class="action-btn-group">
+                <button type="button" class="btn btn-action-edit" title="Edit">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                  </svg>
+                </button>
+                <button type="button" class="btn btn-action-delete" title="Delete">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td class="font-weight-bold">VSCode</td>
+            <td><span class="badge badge-subtle">App</span></td>
+            <td>₹0</td>
+            <td>Microsoft</td>
+            <td>
+              <div class="action-btn-group">
+                <button type="button" class="btn btn-action-edit" title="Edit">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                  </svg>
+                </button>
+                <button type="button" class="btn btn-action-delete" title="Delete">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-<div id="Products" class="tabcontent">
-<div class="filters_container">
-  <!-- Example single danger button -->
-  <button class="add_sign_Btn">
-    <div class="add_profile_sign">+</div>
-  </button>
-  <table
-    class="table table-hover"
-    style="background-color: aliceblue; text-align: center"
-  >
-    <tr>
-      <th scope="col">No</th>
-      <th scope="col"><b>Product name</b></th>
-      <th scope="col"><b>category</b></th>
-      <th scope="col">price</th>
-      <th scope="col">Company</th>
-      <th scope="col">Action</th>
-    </tr>
-    <tr>
-      <td scope="col">1</td>
-      <td scope="col">git</td>
-      <td scope="col">software</td>
-      <td scope="col">0</td>
-      <td scope="col">opensource</td>
-      <td scope="col">
-        <button type="button" class="btn btn-warning">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-pencil-square"
-            viewBox="0 0 16 16"
-          >
-            <path
-              d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
-            />
-            <path
-              fill-rule="evenodd"
-              d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
-            />
-          </svg>
-        </button>
-        <button type="button" class="btn btn-danger">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-trash3-fill"
-            viewBox="0 0 16 16"
-          >
-            <path
-              d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"
-            />
-          </svg>
-        </button>
-      </td>
-    </tr>
-    <tr>
-      <td scope="col">2</td>
-      <td scope="col">VSCode</td>
-      <td scope="col">App</td>
-      <td scope="col">0</td>
-      <td scope="col">Microsoft</td>
-      <td scope="col">
-        <button type="button" class="btn btn-warning">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-pencil-square"
-            viewBox="0 0 16 16"
-          >
-            <path
-              d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
-            />
-            <path
-              fill-rule="evenodd"
-              d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
-            />
-          </svg>
-        </button>
-        <button type="button" class="btn btn-danger">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-trash3-fill"
-            viewBox="0 0 16 16"
-          >
-            <path
-              d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"
-            />
-          </svg>
-        </button>
-      </td>
-    </tr>
-  </table>
-  
-</div> 
-</div>
-
-
-<div id="Peoples" class="tabcontent">
-  <div class="filters_container">
-  <!-- Example single danger button -->
-  <button class="add_sign_Btn">
-    <div class="add_profile_sign">+</div>
-  </button>
-  <table
-    class="table table-hover"
-    style="background-color: aliceblue; text-align: center"
-  >
-    <tr>
-      <th scope="col">No</th>
-      <th scope="col"><b>person name</b></th>
-      <th scope="col"><b>category</b></th>
-      <th scope="col">Contact number</th>
-      <th scope="col">Company</th>
-      <th scope="col">Action</th>
-    </tr>
-    <tr>
-      <td scope="col">1</td>
-      <td scope="col">s.Gill</td>
-      <td scope="col">Kheti</td>
-      <td scope="col">9929968260</td>
-      <td scope="col">opensource</td>
-      <td scope="col">
-        <button type="button" class="btn btn-warning">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-pencil-square"
-            viewBox="0 0 16 16"
-          >
-            <path
-              d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
-            />
-            <path
-              fill-rule="evenodd"
-              d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
-            />
-          </svg>
-        </button>
-        <button type="button" class="btn btn-danger">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-trash3-fill"
-            viewBox="0 0 16 16"
-          >
-            <path
-              d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"
-            />
-          </svg>
-        </button>
-      </td>
-    </tr>
-    <tr>
-      <td scope="col">2</td>
-      <td scope="col">Harman</td>
-      <td scope="col">CA</td>
-      <td scope="col">9825848362</td>
-      <td scope="col">Muthoot fin</td>
-      <td scope="col">
-        <button type="button" class="btn btn-warning">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-pencil-square"
-            viewBox="0 0 16 16"
-          >
-            <path
-              d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
-            />
-            <path
-              fill-rule="evenodd"
-              d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
-            />
-          </svg>
-        </button>
-        <button type="button" class="btn btn-danger">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-trash3-fill"
-            viewBox="0 0 16 16"
-          >
-            <path
-              d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"
-            />
-          </svg>
-        </button>
-      </td>
-    </tr>
-  </table>
-  
-</div>
+  <div id="Peoples" class="tabcontent">
+    <div class="table-action-bar">
+      <h2 class="section-title">Team Contacts</h2>
+      <button class="add_sign_Btn" aria-label="Add new entry">
+        <span class="add_profile_sign">+</span>
+      </button>
+    </div>
+    
+    <div class="table-responsive custom-table-container">
+      <table class="table table-hover standard-inventory-table">
+        <thead>
+          <tr>
+            <th scope="col" style="width: 70px;">No</th>
+            <th scope="col">Person Name</th>
+            <th scope="col">Category</th>
+            <th scope="col">Contact Number</th>
+            <th scope="col">Company</th>
+            <th scope="col" style="width: 130px;">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td class="font-weight-bold">s.Gill</td>
+            <td><span class="badge badge-subtle">Kheti</span></td>
+            <td>9929968260</td>
+            <td>opensource</td>
+            <td>
+              <div class="action-btn-group">
+                <button type="button" class="btn btn-action-edit" title="Edit">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                  </svg>
+                </button>
+                <button type="button" class="btn btn-action-delete" title="Delete">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td class="font-weight-bold">Harman</td>
+            <td><span class="badge badge-subtle">CA</span></td>
+            <td>9825848362</td>
+            <td>Muthoot fin</td>
+            <td>
+              <div class="action-btn-group">
+                <button type="button" class="btn btn-action-edit" title="Edit">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                  </svg>
+                </button>
+                <button type="button" class="btn btn-action-delete" title="Delete">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
 {% endblock %}
+
 {% block js_section %}
 <script>
   function openTab(evt, tabName) {
-  // Hide all tab contents
-  var tabcontent = document.getElementsByClassName("tabcontent");
-  for (var i = 0; i < tabcontent.length; i++) {
-    tabcontent[i].style.display = "none";
+    // Hide all tab contents
+    var tabcontent = document.getElementsByClassName("tabcontent");
+    for (var i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+
+    // Remove "active" class from all buttons
+    var tablinks = document.getElementsByClassName("tablinks");
+    for (var i = 0; i < tablinks.length; i++) {
+      tablinks[i].classList.remove("active");
+    }
+
+    // Show the selected tab and mark button active
+    document.getElementById(tabName).style.display = "block";
+    if (evt) {
+      evt.currentTarget.classList.add("active");
+    }
   }
 
-  // Remove "active" class from all buttons
-  var tablinks = document.getElementsByClassName("tablinks");
-  for (var i = 0; i < tablinks.length; i++) {
-    tablinks[i].className = tablinks[i].className.replace(" active", "");
-  }
-
-  // Show the selected tab and mark button active
-  document.getElementById(tabName).style.display = "block";
-  evt.currentTarget.className += " active";
-}
-
-// Open the first tab by default
-document.getElementsByClassName("tablinks")[0].click();
-
+  // Initialize page and activate initial tab configuration setup
+  document.addEventListener("DOMContentLoaded", function() {
+    var defaultTabBtn = document.querySelector(".tablinks.active");
+    if (defaultTabBtn) {
+      defaultTabBtn.click();
+    } else {
+      document.getElementsByClassName("tablinks")[0].click();
+    }
+  });
 </script>
 {% endblock %}

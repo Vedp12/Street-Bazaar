@@ -1,0 +1,456 @@
+/* ================================================================
+   1. CORE CONTAINER LAYOUT
+   ================================================================ */
+.inventory-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+/* ================================================================
+   2. TOP ACTION HEADER & CONTROLS UI
+   ================================================================ */
+.inventory-header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  background: white;
+  padding: 0.75rem 1.2rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Modernized Back Button Interface Arrow */
+.enter-button {
+  background: #3a8ddc;
+  border: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  box-shadow: 0 3px 8px rgba(58, 141, 220, 0.3);
+}
+
+.enter-button:hover {
+  background: #056fd3;
+  transform: translateX(-3px);
+}
+
+.arrow-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* Rounded Pill Tabs Navigation */
+.tab-navigation {
+  display: flex;
+  background: #eef4f8;
+  padding: 4px;
+  border-radius: 50px;
+}
+
+.tablinks {
+  background: transparent;
+  border: none;
+  padding: 0.6rem 1.6rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #5a6a7a;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none !important;
+}
+
+.tablinks:hover {
+  color: #056fd3;
+}
+
+.tablinks.active {
+  background: white;
+  color: #056fd3;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* ================================================================
+   3. TABLE ACTION HEADERS & ROW BUTTON ACTIONS
+   ================================================================ */
+.tabcontent {
+  display: none;
+  animation: fadeIn 0.35s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.table-action-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0 5px;
+}
+
+.section-title {
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  font-weight: 700;
+  color: #121314;
+  margin: 0;
+}
+
+/* Interactive Add New Sign Button UI Component */
+.add_sign_Btn {
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  background: #2b9781; /* Reused progress color token for accent distribution */
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 10px rgba(43, 151, 129, 0.3);
+}
+
+.add_sign_Btn:hover {
+  background: #207261;
+  transform: scale(1.06);
+}
+
+.add_profile_sign {
+  font-size: 1.6rem;
+  line-height: 1;
+  font-weight: 500;
+}
+
+/* Custom Table Overrides */
+.custom-table-container {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e2edf2;
+  overflow: hidden; /* Clips row angles to border-radius bounds */
+}
+
+.standard-inventory-table {
+  margin-bottom: 0 !important;
+  text-align: center;
+}
+
+.standard-inventory-table thead th {
+  background-color: #f7fafc;
+  color: #4d6176;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.82rem;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid #e2edf2 !important;
+  padding: 1rem 0.75rem;
+  vertical-align: middle;
+}
+
+.standard-inventory-table tbody td {
+  padding: 1rem 0.75rem;
+  vertical-align: middle;
+  color: #1a2e38;
+  font-size: 0.95rem;
+  border-top: 1px solid #edf2f6;
+}
+
+/* Subtle Data Badges */
+.badge-subtle {
+  background-color: #e0f0fd;
+  color: #056fd3;
+  padding: 0.4em 0.8em;
+  font-weight: 600;
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+
+/* Standard Action Row Buttons Grouping */
+.action-btn-group {
+  display: inline-flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.btn-action-edit,
+.btn-action-delete {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: all 0.18s ease;
+  border: none;
+}
+
+.btn-action-edit {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.btn-action-edit:hover {
+  background-color: #ffe8a1;
+  transform: translateY(-1px);
+}
+
+.btn-action-delete {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.btn-action-delete:hover {
+  background-color: #f5c6cb;
+  transform: translateY(-1px);
+}
+
+/* ================================================================
+   4. RETAINED CARD FORM MODULE STYLES (ORIGINAL UNCHANGED RULES)
+   ================================================================ */
+.add-product-card {
+  max-width: 560px;
+  width: min(100%, 100%);
+  margin: 2rem auto;
+  background: white;
+  border-radius: 2rem;
+  box-shadow:
+    0 25px 45px -12px rgba(0, 0, 0, 0.25),
+    0 8px 18px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: transform 0.2s ease;
+}
+.add-product-card:hover {
+  transform: translateY(-3px);
+}
+.form-header {
+  background: #4094e2;
+  padding: 1.4rem 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+}
+.form-header h2 {
+  font-size: clamp(1.4rem, 2.2vw, 1.8rem);
+  font-weight: 700;
+  color: #0a2b3a;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.form-header p {
+  color: #000000;
+  margin-top: 0.5rem;
+  font-weight: 500;
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+.product-form {
+  padding: 2rem 2rem 1.8rem;
+}
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.6rem;
+}
+.input-group label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #1f3e48;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.required-star {
+  color: #e16a5c;
+  font-size: 1rem;
+}
+.input-group input,
+.readonly-tag-input {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  font-size: 1rem;
+  border-radius: 1.2rem;
+  border: 1.5px solid #e2edf2;
+  background: #fefefe;
+  transition: all 0.2s;
+  outline: none;
+  font-weight: 500;
+  color: #1a2e38;
+}
+.input-group input:focus {
+  border-color: #056fd3;
+  box-shadow: 0 0 0 3px rgba(147, 211, 237, 0.25);
+}
+.readonly-tag {
+  background: #f0f9fe;
+  border-color: #cde9f3;
+  color: #1e5e74;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 1rem;
+  border-radius: 1.2rem;
+  border: 1.5px solid #e2edf2;
+}
+.tag-badge {
+  background: #cae5f0;
+  padding: 0.2rem 0.7rem;
+  border-radius: 30px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #0b4b60;
+}
+.row-dual {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.row-dual .input-group {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+.save-btn {
+  background: #4094e2;
+  border: none;
+  width: 100%;
+  padding: 1rem 1.2rem;
+  border-radius: 2.5rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #000000;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 5px 12px rgba(147, 211, 237, 0.4);
+}
+.save-btn:hover {
+  background: #127bdd;
+  color: white;
+  transform: translateY(-2px);
+}
+.feedback-area {
+  margin-top: 1.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 1.5rem;
+  background: #f1f9fe;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #0e4b60;
+  border-left: 4px solid #93d3ed;
+}
+.note {
+  font-size: 0.7rem;
+  text-align: center;
+  color: #6f8f9c;
+  margin-top: 1.2rem;
+  border-top: 1px dashed #cde3ec;
+  padding-top: 1rem;
+}
+
+/* ================================================================
+   5. ADVANCED RESPONSIVE MEDIA BREAKPOINTS
+   ================================================================ */
+@media (max-width: 768px) {
+  .inventory-container {
+    padding: 5px;
+  }
+
+  .inventory-header-actions {
+    margin-bottom: 1.5rem;
+    padding: 0.6rem 1rem;
+    gap: 0.75rem;
+  }
+
+  .tablinks {
+    padding: 0.5rem 1.1rem;
+    font-size: 0.88rem;
+  }
+
+  .standard-inventory-table thead th,
+  .standard-inventory-table tbody td {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.88rem;
+  }
+
+  .add-product-card {
+    border-radius: 1.5rem;
+  }
+  .form-header,
+  .product-form {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Stack layout dynamically on compact hand devices */
+  .inventory-header-actions {
+    flex-direction: column;
+    align-items: stretch;
+    border-radius: 0.75rem;
+  }
+
+  .enter-button {
+    align-self: flex-start;
+    width: 36px;
+    height: 36px;
+  }
+
+  .tab-navigation {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .tablinks {
+    flex: 1;
+    text-align: center;
+  }
+
+  .table-action-bar {
+    align-items: center;
+  }
+
+  .add_sign_Btn {
+    width: 38px;
+    height: 38px;
+  }
+
+  .add-product-card {
+    border-radius: 1.25rem;
+  }
+  .row-dual {
+    gap: 0;
+  }
+  .row-dual .input-group {
+    flex-basis: 100%;
+  }
+}

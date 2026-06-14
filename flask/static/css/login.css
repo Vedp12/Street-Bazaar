@@ -26,7 +26,12 @@ body {
 }
 
 body {
-  background: radial-gradient(circle at 20% 20%, #f2f8fc 0%, var(--bg) 45%, #deecf7 100%);
+  background: radial-gradient(
+    circle at 20% 20%,
+    #f2f8fc 0%,
+    var(--bg) 45%,
+    #deecf7 100%
+  );
   color: var(--text);
 }
 
@@ -56,7 +61,11 @@ body {
 .image-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, rgba(4, 36, 70, 0.1) 0%, rgba(4, 36, 70, 0.62) 100%);
+  background: linear-gradient(
+    to bottom,
+    rgba(4, 36, 70, 0.1) 0%,
+    rgba(4, 36, 70, 0.62) 100%
+  );
   display: flex;
   align-items: flex-end;
   padding: clamp(1.2rem, 3vw, 2.8rem);
@@ -75,8 +84,9 @@ body {
 .form-panel {
   display: grid;
   place-items: center;
-  padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right))
-    max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+  padding: max(1rem, env(safe-area-inset-top))
+    max(1rem, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom))
+    max(1rem, env(safe-area-inset-left));
   overflow-y: auto;
 }
 
@@ -86,7 +96,9 @@ body {
   border: 1px solid rgba(0, 80, 160, 0.12);
   border-radius: 1.4rem;
   backdrop-filter: blur(6px);
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08), 0 22px 44px rgba(0, 80, 160, 0.14);
+  box-shadow:
+    0 10px 30px rgba(15, 23, 42, 0.08),
+    0 22px 44px rgba(0, 80, 160, 0.14);
   overflow: hidden;
   animation: slideUp 650ms ease-out both;
 }
@@ -121,7 +133,8 @@ body {
 }
 
 .login-form {
-  padding: clamp(1rem, 3vw, 1.8rem) clamp(1rem, 3vw, 2rem) clamp(1.2rem, 3vw, 1.9rem);
+  padding: clamp(1rem, 3vw, 1.8rem) clamp(1rem, 3vw, 2rem)
+    clamp(1.2rem, 3vw, 1.9rem);
 }
 
 .input-group {
@@ -152,7 +165,10 @@ body {
   font-size: max(16px, 0.965rem);
   font-weight: 500;
   outline: none;
-  transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    background-color 180ms ease;
   -webkit-appearance: none;
 }
 
@@ -185,7 +201,9 @@ body {
   height: 1.9rem;
   display: grid;
   place-items: center;
-  transition: color 160ms ease, background-color 160ms ease;
+  transition:
+    color 160ms ease,
+    background-color 160ms ease;
 }
 
 .toggle-pw:hover,
@@ -230,7 +248,10 @@ body {
   justify-content: center;
   gap: 0.52rem;
   box-shadow: 0 8px 20px rgba(0, 123, 255, 0.32);
-  transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    filter 160ms ease;
 }
 
 .login-btn:active {
@@ -279,7 +300,9 @@ body {
 @media (hover: hover) and (pointer: fine) {
   .login-container:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.11), 0 24px 46px rgba(0, 80, 160, 0.17);
+    box-shadow:
+      0 12px 32px rgba(15, 23, 42, 0.11),
+      0 24px 46px rgba(0, 80, 160, 0.17);
   }
 
   .login-btn:hover {
