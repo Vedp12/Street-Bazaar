@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}" />
+  </head>
+  <body>
+    <main class="page-wrapper" role="main">
+      <section class="image-panel" aria-label="Workspace image">
+        <img
+          id="login_page_image"
+          src="{{ url_for('static', filename='IMG/loginpage.jpeg') }}"
+          alt="A modern workspace"
+        />
+        </section>
+
+      <section class="form-panel" aria-label="Login form section">
+        <div class="login-container">
+          <header class="form-header">
+            <div class="brand-dot" aria-hidden="true"></div>
+            <h1>Welcome back</h1>
+            <p>Sign in to continue</p>
+          </header>
+
+          <form class="login-form" action="" method="POST" autocomplete="on">
+            <div class="input-group">
+              <i class="fas fa-envelope" aria-hidden="true"></i>
+              <label class="sr-only" for="email">Email address</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Email address"
+                autocomplete="email"
+                required
+              />
+            </div>
+
+            <div class="input-group">
+              <i class="fas fa-lock" aria-hidden="true"></i>
+              <label class="sr-only" for="password">Password</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Password"
+                autocomplete="current-password"
+                required
+              />
+              <button type="button" class="toggle-pw" id="togglePw" aria-label="Show password">
+                <i class="fas fa-eye" id="togglePwIcon" aria-hidden="true"></i>
+              </button>
+            </div>
+
+            <div class="forgot-row">
+              <a href="#" class="forgot-link">Forgot password?</a>
+            </div>
+
+            <button type="submit" class="login-btn" id="loginBtn">
+              <i class="fas fa-arrow-right-to-bracket" aria-hidden="true"></i>
+              Sign in
+            </button>
+
+            <div class="signup-link">
+              <span>No account?</span>
+              <a href="{{ url_for('signup') }}" id="signupRedirectLink" >
+                Create one <i class="fas fa-arrow-right" aria-hidden="true"></i>
+              </a>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const btn = document.getElementById("togglePw");
+      const input = document.getElementById("password");
+      const icon = document.getElementById("togglePwIcon");
+
+      if (btn && input && icon) {
+        btn.addEventListener("click", () => {
+          const show = input.type === "password";
+          input.type = show ? "text" : "password";
+          icon.className = show ? "fas fa-eye-slash" : "fas fa-eye";
+          btn.setAttribute("aria-label", show ? "Hide password" : "Show password");
+        });
+      }
+    </script>
+  </body>
+</html>

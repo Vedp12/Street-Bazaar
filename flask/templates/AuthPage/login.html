@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <style>
+      .alert-error {
+        color: red;
+        padding: 10px;
+        border-radius: 4px;
+        background-color: #ffebee;
+        display: none;
+        margin: 10px 0;
+      }
+      .alert-error.show {
+        display: block;
+      }
+      .loading {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="inputs_form">
+        <h3>Email</h3>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="rahul@yourshop.com"
+          autocomplete="email"
+          required
+        />
+        <h3>Password</h3>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          autocomplete="current-password"
+          required
+        />
+        <div id="alert-error" class="alert-error">
+          <span id="alert-msg"></span>
+        </div>
+        <button class="btn-primary" id="login-btn" onclick="handleLogin(event)">
+          <span id="btn-text">Sign In →</span>
+        </button>
+      </div>
+      <p class="auth-footer">
+        Don't have an account?
+        <a href="{{ url_for('signup') }}">Create one free</a>
+      </p>
+    </main>
+    <script>
+      // Show error alert
+      function showError(msg) {
+        const el = document.getElementById("alert-error");
+        document.getElementById("alert-msg").textContent = msg;
+        el.classList.add("show");
+      }
+
+      // Hide error alert
+      function hideError() {
+        document.getElementById("alert-error").classList.remove("show");
+      }
+
+      // Handle login via REST API
+      async function handleLogin(e) {
+        e.preventDefault(); // Prevent default form submission
+        hideError();
+
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value.trim();
+
+        // Guard clauses
+        if (!email || !password) {
+          showError("Please enter your email and password.");
+          return;
+        }
+
+        // Loading state
+        const btn = document.getElementById("login-btn");
+        const label = document.getElementById("btn-text");
+        btn.classList.add("loading");
+        label.textContent = "Signing in…";
+
+        try {
+          const res = await fetch("/api/login", {
+            // Changed endpoint to /api/login
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+          });
+
+          // Debug: Log the response status and data
+          console.log("Response status:", res.status);
+          const data = await res.json();
+          console.log("Response data:", data);
+
+          if (res.ok) {
+            // Success → redirect to home
+            window.location.href = "/home";
+          } else {
+            // Handle HTTP errors (e.g., 401 Unauthorized)
+            showError(data.error || "Login failed. Please try again.");
+          }
+        } catch (error) {
+          // Only catch actual network errors
+          console.error("Network error:", error);
+          showError("Network error. Please check your connection.");
+        } finally {
+          // Reset button state
+          btn.classList.remove("loading");
+          label.textContent = "Sign In →";
+        }
+      }
+
+      // Allow Enter key to submit
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && e.target.tagName === "INPUT") {
+          handleLogin(e);
+        }
+      });
+    </script>
+  </body>
+</html>

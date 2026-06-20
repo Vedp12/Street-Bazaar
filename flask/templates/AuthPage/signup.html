@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up</title>
+    <style>
+      .error-message {
+        color: red;
+        margin-top: 10px;
+        display: none;
+      }
+      .loading {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+      #image-preview {
+        max-width: 100px;
+        max-height: 100px;
+        margin-top: 10px;
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Main Code</h1>
+    <div class="inputs_form">
+      <h3>Image data</h3>
+      <input
+        type="file"
+        accept="image/*"
+        name="avatar"
+        id="avatar"
+        onchange="previewImage(event)"
+      />
+      <img id="image-preview" alt="Image Preview" />
+      <h3>Name</h3>
+      <input
+        type="text"
+        placeholder="name"
+        name="name"
+        autocomplete="name"
+        id="name"
+        required
+      />
+      <h3>Email</h3>
+      <input
+        type="email"
+        name="email"
+        id="email"
+        autocomplete="email"
+        required
+      />
+      <h3>Shop name</h3>
+      <input
+        type="text"
+        placeholder="shop name"
+        name="shop_name"
+        id="shop"
+        required
+      />
+      <h3>Password</h3>
+      <input type="password" name="password" id="password" required />
+      <h3>Confirm password</h3>
+      <input
+        type="password"
+        name="confirm_password"
+        id="confirm_password"
+        required
+      />
+      <p id="error-message" class="error-message"></p>
+      <button class="btn-primary" id="signup-btn" onclick="handleSignup()">
+        <span id="btn-text">Create Account →</span>
+      </button>
+      <p class="auth-footer">
+        Already a user?
+        <a href="{{ url_for('login') }}">Log in</a>
+      </p>
+    </div>
+    <script>
+      // Preview uploaded image
+      function previewImage(event) {
+        const file = event.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const preview = document.getElementById("image-preview");
+            preview.src = e.target.result;
+            preview.style.display = "block";
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+
+      // Show error message
+      function showError(message) {
+        const errorElement = document.getElementById("error-message");
+        errorElement.textContent = message;
+        errorElement.style.display = "block";
+      }
+
+      // Hide error message
+      function hideError() {
+        const errorElement = document.getElementById("error-message");
+        errorElement.style.display = "none";
+      }
+
+      // Validate email format
+      function isValidEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+      }
+
+      // Handle signup
+      async function handleSignup() {
+        hideError();
+        const name = document.getElementById("name").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value.trim();
+        const confirmPassword = document .getElementById("confirm_password")
+          .value.trim();
+        const shopName = document.getElementById("shop").value.trim();
+        const avatar = document.getElementById("avatar").files[0];
+
+        // Validate fields
+        if (!name || !email || !password || !confirmPassword || !shopName) {
+          showError("Please fill in all fields.");
+          return;
+        }
+        if (!isValidEmail(email)) {
+          showError("Please enter a valid email address.");
+          return;
+        }
+        if (password.length < 6) {
+          showError("Password must be at least 6 characters.");
+          return;
+        }
+        if (password !== confirmPassword) {
+          showError("Passwords do not match.");
+          return;
+        }
+
+        // Set loading state
+        const btn = document.getElementById("signup-btn");
+        const lbl = document.getElementById("btn-text");
+        btn.classList.add("loading");
+        lbl.textContent = "Creating account…";
+
+        // Prepare FormData
+        const fd = new FormData();
+        fd.append("name", name);
+        fd.append("email", email);
+        fd.append("password", password);
+        fd.append("confirm_password", confirmPassword);   // <-- ADD THIS LINE
+        fd.append("shop_name", shopName);
+        if (avatar) fd.append("avatar", avatar);
+
+        try {
+          const res = await fetch("/api/signup", {
+            method: "POST",
+            body: fd,
+          });
+          const data = await res.json();
+          if (res.ok) {
+            window.location.href = "/home";
+          } else {
+            showError(data.error || "Something went wrong.");
+            btn.classList.remove("loading");
+            lbl.textContent = "Create Account →";
+          }
+        } catch (_) {
+          showError("Network error. Please check your connection.");
+          btn.classList.remove("loading");
+          lbl.textContent = "Create Account →";
+        }
+      }
+
+      // Handle Enter key
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && e.target.tagName === "INPUT") {
+          handleSignup();
+        }
+      });
+    </script>
+  </body>
+</html>
