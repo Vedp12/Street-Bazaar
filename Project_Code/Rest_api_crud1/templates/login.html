@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — Street Bazaar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="auth-wrapper">
+
+  <!-- ── Brand panel ────────────────────────────────────── -->
+  <aside class="auth-brand">
+    <div class="brand-logo">Street <span>Bazaar</span></div>
+    <p class="brand-tagline">Welcome back — your shop is waiting for you.</p>
+    <ul class="brand-features">
+      <li>Inventory & stock management</li>
+      <li>Invoicing & billing in seconds</li>
+      <li>Digital storefront for customers</li>
+      <li>Sales reports & insights</li>
+    </ul>
+  </aside>
+
+  <!-- ── Form panel ─────────────────────────────────────── -->
+  <main class="auth-form-panel">
+    <div class="auth-card">
+      <h1>Sign in to your shop</h1>
+      <p class="subtitle">Enter your credentials to continue.</p>
+
+      <!-- Alert box -->
+      <div class="alert alert-error" id="alert-error" role="alert">
+        <span>⚠</span> <span id="alert-msg"></span>
+      </div>
+
+      <!-- Email field -->
+      <div class="field">
+        <label for="email">Email Address</label>
+        <div class="input-wrap">
+          <span class="icon">✉</span>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="rahul@yourshop.com"
+            autocomplete="email"
+            required
+          >
+        </div>
+      </div>
+
+      <!-- Password field -->
+      <div class="field">
+        <label for="password">Password</label>
+        <div class="input-wrap">
+          <span class="icon">🔒</span>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Your password"
+            autocomplete="current-password"
+            required
+          >
+          <!-- Toggle password visibility -->
+          <button
+            type="button"
+            class="toggle-eye"
+            aria-label="Toggle password visibility"
+            onclick="togglePassword('password', this)"
+          >👁</button>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <button class="btn-primary" id="login-btn" onclick="handleLogin()">
+        <span id="btn-text">Sign In →</span>
+      </button>
+
+      <p class="auth-footer">
+        Don't have an account?
+        <a href="{{ url_for('signup') }}">Create one free</a>
+      </p>
+    </div>
+  </main>
+
+</div>
+
+<script>
+  /* ── Toggle password visibility ───────────────────────────── */
+  function togglePassword(inputId, btn) {
+    const input = document.getElementById(inputId);
+    const isHidden = input.type === "password";
+    input.type      = isHidden ? "text" : "password";
+    btn.textContent = isHidden ? "🙈" : "👁";
+  }
+
+  /* ── Show error alert ─────────────────────────────────────── */
+  function showError(msg) {
+    const el = document.getElementById("alert-error");
+    document.getElementById("alert-msg").textContent = msg;
+    el.classList.add("show");
+  }
+  function hideError() {
+    document.getElementById("alert-error").classList.remove("show");
+  }
+
+  /* ── Handle login via REST API ────────────────────────────── */
+  async function handleLogin() {
+    hideError();
+
+    const email    = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+    // Guard clauses
+    if (!email || !password) { showError("Please enter your email and password."); return; }
+
+    // Loading state
+    const btn   = document.getElementById("login-btn");
+    const label = document.getElementById("btn-text");
+    btn.classList.add("loading");
+    label.textContent = "Signing in…";
+
+    try {
+      const res  = await fetch("/api/login", {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify({ email, password })
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        // Success → redirect to home
+        window.location.href = "/";
+      } else {
+        showError(data.error || "Login failed. Please try again.");
+        btn.classList.remove("loading");
+        label.textContent = "Sign In →";
+      }
+    } catch (_) {
+      showError("Network error. Please check your connection.");
+      btn.classList.remove("loading");
+      label.textContent = "Sign In →";
+    }
+  }
+
+  /* ── Allow Enter key to submit ────────────────────────────── */
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") handleLogin();
+  });
+</script>
+</body>
+</html>

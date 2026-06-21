@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up — Street Bazaar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="auth-wrapper">
+
+  <!-- ── Brand panel ── -->
+  <aside class="auth-brand">
+    <div class="brand-logo">Street <span>Bazaar</span></div>
+    <p class="brand-tagline">The all-in-one platform built for shop owners like you.</p>
+    <ul class="brand-features">
+      <li>Inventory &amp; stock management</li>
+      <li>Invoicing &amp; billing in seconds</li>
+      <li>Digital storefront for customers</li>
+      <li>Sales reports &amp; insights</li>
+    </ul>
+  </aside>
+
+  <!-- ── Form panel ── -->
+  <main class="auth-form-panel">
+    <div class="auth-card">
+      <h1>Create your account</h1>
+      <p class="subtitle">Get started — it only takes a minute.</p>
+
+      <div class="alert alert-error" id="alert-error" role="alert">
+        <span>⚠</span> <span id="alert-msg"></span>
+      </div>
+
+      <!-- Avatar picker -->
+      <div class="avatar-picker">
+        <div class="avatar-preview" id="avatar-preview">
+          <span class="avatar-placeholder">🏪</span>
+        </div>
+        <div class="avatar-picker-info">
+          <p class="avatar-label">Shop Logo / Photo</p>
+          <label class="btn-choose-img" for="avatar">Choose Image</label>
+          <input type="file" id="avatar" name="avatar" accept="image/*" hidden>
+          <p class="avatar-hint">PNG, JPG, WEBP · max 5 MB</p>
+        </div>
+      </div>
+
+      <!-- Name -->
+      <div class="field">
+        <label for="name">Full Name</label>
+        <div class="input-wrap">
+          <span class="icon">👤</span>
+          <input type="text" id="name" placeholder="Rahul Sharma" autocomplete="name" required>
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="field">
+        <label for="email">Email Address</label>
+        <div class="input-wrap">
+          <span class="icon">✉</span>
+          <input type="email" id="email" placeholder="rahul@yourshop.com" autocomplete="email" required>
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="field">
+        <label for="password">Password</label>
+        <div class="input-wrap">
+          <span class="icon">🔒</span>
+          <input type="password" id="password" placeholder="Min. 6 characters" autocomplete="new-password" required>
+          <button type="button" class="toggle-eye" onclick="togglePw('password',this)">👁</button>
+        </div>
+      </div>
+
+      <button class="btn-primary" id="signup-btn" onclick="handleSignup()">
+        <span id="btn-text">Create Account →</span>
+      </button>
+
+      <p class="auth-footer">Already have an account? <a href="{{ url_for('login') }}">Sign in</a></p>
+    </div>
+  </main>
+
+</div>
+<script>
+  /* ── Avatar live preview ── */
+  document.getElementById("avatar").addEventListener("change", function() {
+    const file = this.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      const prev = document.getElementById("avatar-preview");
+      prev.innerHTML = `<img src="${e.target.result}" alt="preview">`;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  function togglePw(id, btn) {
+    const el = document.getElementById(id);
+    el.type = el.type === "password" ? "text" : "password";
+    btn.textContent = el.type === "password" ? "👁" : "🙈";
+  }
+
+  function showError(msg) {
+    document.getElementById("alert-msg").textContent = msg;
+    document.getElementById("alert-error").classList.add("show");
+  }
+  function hideError() { document.getElementById("alert-error").classList.remove("show"); }
+
+  async function handleSignup() {
+    hideError();
+    const name     = document.getElementById("name").value.trim();
+    const email    = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const avatar   = document.getElementById("avatar").files[0];
+
+    if (!name || !email || !password) { showError("Please fill in all fields."); return; }
+    if (password.length < 6)          { showError("Password must be at least 6 characters."); return; }
+
+    const btn = document.getElementById("signup-btn");
+    const lbl = document.getElementById("btn-text");
+    btn.classList.add("loading"); lbl.textContent = "Creating account…";
+
+    /* Use FormData so the image file is sent as multipart */
+    const fd = new FormData();
+    fd.append("name", name);
+    fd.append("email", email);
+    fd.append("password", password);
+    if (avatar) fd.append("avatar", avatar);
+
+    try {
+      const res  = await fetch("/api/signup", { method: "POST", body: fd });
+      const data = await res.json();
+      if (res.ok) { window.location.href = "/"; }
+      else {
+        showError(data.error || "Something went wrong.");
+        btn.classList.remove("loading"); lbl.textContent = "Create Account →";
+      }
+    } catch (_) {
+      showError("Network error. Please check your connection.");
+      btn.classList.remove("loading"); lbl.textContent = "Create Account →";
+    }
+  }
+
+  document.addEventListener("keydown", e => { if (e.key === "Enter") handleSignup(); });
+</script>
+</body>
+</html>

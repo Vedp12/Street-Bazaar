@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Street Bazaar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="home-wrapper">
+
+  <!-- ── Top Nav ── -->
+  <nav class="home-nav">
+    <span class="logo">Street Bazaar</span>
+    <div class="nav-user">
+      {% if user.avatar_url() %}
+        <img src="{{ user.avatar_url() }}" class="nav-avatar" alt="avatar">
+      {% else %}
+        <div class="nav-avatar-placeholder">{{ user.name[0].upper() }}</div>
+      {% endif %}
+      <span class="nav-name">{{ user.name }}</span>
+      <a href="{{ url_for('edit_profile') }}" class="btn-edit">✏ Edit Profile</a>
+      <a href="{{ url_for('logout') }}" class="btn-logout">Log Out</a>
+    </div>
+  </nav>
+
+  <!-- ── Body ── -->
+  <div class="home-body">
+
+    <!-- Profile card -->
+    <div class="profile-card">
+      <div class="profile-avatar-wrap">
+        {% if user.avatar_url() %}
+          <img src="{{ user.avatar_url() }}" class="profile-avatar" alt="{{ user.name }}">
+        {% else %}
+          <div class="profile-avatar-placeholder">{{ user.name[0].upper() }}</div>
+        {% endif %}
+      </div>
+      <div class="profile-info">
+        <h2>{{ user.name }}</h2>
+        <p class="profile-email">{{ user.email }}</p>
+        <a href="{{ url_for('edit_profile') }}" class="btn-primary btn-sm">✏ Edit Profile</a>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="label">Total Products</div>
+        <div class="value">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Invoices This Month</div>
+        <div class="value">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Revenue (₹)</div>
+        <div class="value">—</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

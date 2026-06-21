@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Profile — Street Bazaar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="home-wrapper">
+
+  <!-- ── Nav ── -->
+  <nav class="home-nav">
+    <span class="logo">Street Bazaar</span>
+    <div class="nav-user">
+      <a href="{{ url_for('home') }}" class="btn-logout">← Dashboard</a>
+      <a href="{{ url_for('logout') }}" class="btn-logout">Log Out</a>
+    </div>
+  </nav>
+
+  <!-- ── Edit body ── -->
+  <div class="home-body">
+    <div class="edit-card">
+      <h2 class="edit-title">Edit Profile</h2>
+      <p class="edit-subtitle">Update your name, email, image, or password.</p>
+
+      <div class="alert alert-error"   id="alert-error"   role="alert"><span>⚠</span> <span id="err-msg"></span></div>
+      <div class="alert alert-success" id="alert-success" role="alert"><span>✓</span> <span id="ok-msg"></span></div>
+
+      <!-- Avatar section -->
+      <div class="avatar-picker edit-avatar-section">
+        <div class="avatar-preview" id="avatar-preview">
+          {% if user.avatar_url() %}
+            <img src="{{ user.avatar_url() }}" alt="current avatar" id="current-avatar">
+          {% else %}
+            <span class="avatar-placeholder">{{ user.name[0].upper() }}</span>
+          {% endif %}
+        </div>
+        <div class="avatar-picker-info">
+          <p class="avatar-label">Profile Photo</p>
+          <label class="btn-choose-img" for="avatar">Change Photo</label>
+          <input type="file" id="avatar" accept="image/*" hidden>
+          <p class="avatar-hint">PNG, JPG, WEBP · max 5 MB</p>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <!-- Name -->
+      <div class="field">
+        <label for="name">Full Name</label>
+        <div class="input-wrap">
+          <span class="icon">👤</span>
+          <input type="text" id="name" value="{{ user.name }}" placeholder="Full name">
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="field">
+        <label for="email">Email Address</label>
+        <div class="input-wrap">
+          <span class="icon">✉</span>
+          <input type="email" id="email" value="{{ user.email }}" placeholder="Email">
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <!-- New password -->
+      <div class="field">
+        <label for="new_password">New Password <span class="optional">(leave blank to keep current)</span></label>
+        <div class="input-wrap">
+          <span class="icon">🔑</span>
+          <input type="password" id="new_password" placeholder="New password (min. 6 chars)" autocomplete="new-password">
+          <button type="button" class="toggle-eye" onclick="togglePw('new_password',this)">👁</button>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <!-- Current password — required for any change -->
+      <div class="field">
+        <label for="current_password">Current Password <span class="required-badge">Required</span></label>
+        <div class="input-wrap">
+          <span class="icon">🔒</span>
+          <input type="password" id="current_password" placeholder="Enter current password to confirm" autocomplete="current-password" required>
+          <button type="button" class="toggle-eye" onclick="togglePw('current_password',this)">👁</button>
+        </div>
+      </div>
+
+      <div class="edit-actions">
+        <a href="{{ url_for('home') }}" class="btn-secondary">Cancel</a>
+        <button class="btn-primary" id="save-btn" onclick="handleUpdate()">
+          <span id="save-label">Save Changes</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+<script>
+  /* ── Live avatar preview ── */
+  document.getElementById("avatar").addEventListener("change", function() {
+    const file = this.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      document.getElementById("avatar-preview").innerHTML =
+        `<img src="${e.target.result}" alt="preview">`;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  function togglePw(id, btn) {
+    const el = document.getElementById(id);
+    el.type = el.type === "password" ? "text" : "password";
+    btn.textContent = el.type === "password" ? "👁" : "🙈";
+  }
+
+  function showAlert(type, msg) {
+    document.getElementById("alert-error").classList.remove("show");
+    document.getElementById("alert-success").classList.remove("show");
+    if (type === "error") {
+      document.getElementById("err-msg").textContent = msg;
+      document.getElementById("alert-error").classList.add("show");
+    } else {
+      document.getElementById("ok-msg").textContent = msg;
+      document.getElementById("alert-success").classList.add("show");
+    }
+  }
+
+  async function handleUpdate() {
+    showAlert("", "");   // clear
+    const current_password = document.getElementById("current_password").value.trim();
+    if (!current_password) { showAlert("error", "Please enter your current password to save changes."); return; }
+
+    const btn = document.getElementById("save-btn");
+    const lbl = document.getElementById("save-label");
+    btn.classList.add("loading"); lbl.textContent = "Saving…";
+
+    const fd = new FormData();
+    fd.append("name",             document.getElementById("name").value.trim());
+    fd.append("email",            document.getElementById("email").value.trim());
+    fd.append("current_password", current_password);
+    const newPw = document.getElementById("new_password").value.trim();
+    if (newPw) fd.append("new_password", newPw);
+    const avatarFile = document.getElementById("avatar").files[0];
+    if (avatarFile) fd.append("avatar", avatarFile);
+
+    try {
+      const res  = await fetch("/api/profile", { method: "PUT", body: fd });
+      const data = await res.json();
+      if (res.ok) {
+        showAlert("success", "Profile updated successfully!");
+        /* Update nav avatar if present */
+        if (data.user.avatar_url) {
+          const imgs = document.querySelectorAll(".nav-avatar, .profile-avatar");
+          imgs.forEach(img => { img.src = data.user.avatar_url + "?t=" + Date.now(); });
+        }
+      } else {
+        showAlert("error", data.error || "Update failed. Please try again.");
+      }
+    } catch (_) {
+      showAlert("error", "Network error. Please check your connection.");
+    } finally {
+      btn.classList.remove("loading"); lbl.textContent = "Save Changes";
+    }
+  }
+</script>
+</body>
+</html>
