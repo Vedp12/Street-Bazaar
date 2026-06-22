@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, s
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from PIL import Image
-from templates.Database.model import db, Authentacation
+from templates.Database.models import db, Authentacation
 import os
 import uuid
 from functools import wraps
@@ -156,9 +156,9 @@ def landing():
 @app.route('/home')
 @login_required
 def home():
-    # user = Authentacation.query.get(session["user_id"])
-    return render_template("home/home.html")
-
+    # Fetch the user using the ID from the session
+    user = Authentacation.query.get(session["user_id"])
+    return render_template("home/home.html", user=user)
 
 @app.route('/signup')
 def signup():

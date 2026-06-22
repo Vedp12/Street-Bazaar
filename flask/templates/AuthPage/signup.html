@@ -1,80 +1,53 @@
-<!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sign Up</title>
-    <style>
-      .error-message {
-        color: red;
-        margin-top: 10px;
-        display: none;
-      }
-      .loading {
-        opacity: 0.7;
-        cursor: not-allowed;
-      }
-      #image-preview {
-        max-width: 100px;
-        max-height: 100px;
-        margin-top: 10px;
-        display: none;
-      }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+      Sign Up
+    </title>
   </head>
   <body>
-    <h1>Main Code</h1>
+    <h1>
+      Main Code
+    </h1>
     <div class="inputs_form">
-      <h3>Image data</h3>
-      <input
-        type="file"
-        accept="image/*"
-        name="avatar"
-        id="avatar"
-        onchange="previewImage(event)"
-      />
-      <img id="image-preview" alt="Image Preview" />
-      <h3>Name</h3>
-      <input
-        type="text"
-        placeholder="name"
-        name="name"
-        autocomplete="name"
-        id="name"
-        required
-      />
-      <h3>Email</h3>
-      <input
-        type="email"
-        name="email"
-        id="email"
-        autocomplete="email"
-        required
-      />
-      <h3>Shop name</h3>
-      <input
-        type="text"
-        placeholder="shop name"
-        name="shop_name"
-        id="shop"
-        required
-      />
-      <h3>Password</h3>
-      <input type="password" name="password" id="password" required />
-      <h3>Confirm password</h3>
-      <input
-        type="password"
-        name="confirm_password"
-        id="confirm_password"
-        required
-      />
-      <p id="error-message" class="error-message"></p>
+      <h3>
+        Image data
+      </h3>
+      <input type="file" accept="image/*" name="avatar" id="avatar" onchange="previewImage(event)">
+      <img id="image-preview" alt="Image Preview">
+      <h3>
+        Name
+      </h3>
+      <input type="text" placeholder="name" name="name" autocomplete="name" id="name" required="">
+      <h3>
+        Email
+      </h3>
+      <input type="email" name="email" id="email" autocomplete="email" required="">
+      <h3>
+        Shop name
+      </h3>
+      <input type="text" placeholder="shop name" name="shop_name" id="shop" required="">
+      <h3>
+        Password
+      </h3>
+      <input type="password" name="password" id="password" required="">
+      <h3>
+        Confirm password
+      </h3>
+      <input type="password" name="confirm_password" id="confirm_password" required="">
+      <p id="error-message" class="error-message">
+      </p>
       <button class="btn-primary" id="signup-btn" onclick="handleSignup()">
-        <span id="btn-text">Create Account →</span>
+        <span id="btn-text">
+          Create Account →
+        </span>
       </button>
       <p class="auth-footer">
         Already a user?
-        <a href="{{ url_for('login') }}">Log in</a>
+        <a href="{{ url_for('login') }}">
+          Log in
+        </a>
       </p>
     </div>
     <script>

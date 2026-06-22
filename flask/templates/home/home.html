@@ -1,11 +1,29 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <img src="" alt="">
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Home - {{ user.name }}</title>
+  </head>
+  <body>
+    <h1>Welcome, {{ user.name }}!</h1>
+
+    {% if user.avatar %}
+    <img
+      src="{{ url_for('static', filename='uploads/' + user.avatar) }}"
+      alt="Profile Picture"
+      style="width: 150px; border-radius: 50%"
+    />
+    {% else %}
+    <p>No avatar uploaded.</p>
+    {% endif %}
+
+    <div class="user-details">
+      <p><strong>Shop Name:</strong> {{ user.shop_name }}</p>
+      <p><strong>Email:</strong> {{ user.email }}</p>
+    </div>
+
+    <form action="/api/logout" method="POST">
+      <button type="submit">Logout</button>
+    </form>
+  </body>
 </html>

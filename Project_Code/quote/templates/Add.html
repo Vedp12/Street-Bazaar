@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add</title>
+  </head>
+  <body>
+    <input type="text" id="quote_title" required />
+    <input type="text" id="Quote_text" required />
+
+    <p id="error-message"></p>
+
+    <button type="button" onclick="handleSignup()">Add Data</button>
+    <script>
+      function showError(message) {
+        const errorElement = document.getElementById("error-message");
+        errorElement.textContent = message;
+      }
+
+      function clearError() {
+        const errorElement = document.getElementById("error-message");
+        errorElement.textContent = "";
+      }
+
+      async function handleSignup() {
+        clearError();
+
+        const quote_title = document.getElementById("quote_title").value.trim();
+        const Quote = document.getElementById("Quote").value.trim();
+
+        if (!quote_title || !Quote) {
+          showError("Enter all fields!");
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append("quote_title", quote_title);
+        formData.append("Quote", Quote);
+
+        try {
+          const response = await fetch("/api/add", {
+            method: "POST",
+            body: formData,
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            alert("Quote Added Successfully");
+            window.location.href = "/Quote";
+          } else {
+            showError(data.error || "Something went wrong");
+          }
+        } catch (error) {
+          console.error(error);
+          showError("Network Error");
+        }
+      }
+
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+          handleSignup();
+        }
+      });
+    </script>
+  </body>
+</html>
