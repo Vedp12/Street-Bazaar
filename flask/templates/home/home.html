@@ -1,12 +1,26 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <style>
+      .modal {
+        background-color: rgb(212, 206, 206);
+        opacity: 0;
+        height: 20%;
+        transition: all 0.3s ease-in-out;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .modal.open {
+        opacity: 1;
+        z-index: 999;
+      }
+    </style>
     <title>Home - {{ user.name }}</title>
   </head>
   <body>
     <h1>Welcome, {{ user.name }}!</h1>
-
     {% if user.avatar %}
     <img
       src="{{ url_for('static', filename='uploads/' + user.avatar) }}"
@@ -16,14 +30,104 @@
     {% else %}
     <p>No avatar uploaded.</p>
     {% endif %}
-
     <div class="user-details">
-      <p><strong>Shop Name:</strong> {{ user.shop_name }}</p>
-      <p><strong>Email:</strong> {{ user.email }}</p>
+      <p><strong> Shop Name: </strong> {{ user.shop_name }}</p>
+      <p><strong> Email: </strong> {{ user.email }}</p>
     </div>
 
-    <form action="/api/logout" method="POST">
-      <button type="submit">Logout</button>
-    </form>
+    <button id="openModal">Open Modal</button>
+    <div class="modal" id="modal">
+      <button id="closeModal" type="button">Close</button>
+      <br />
+      <div class="product_section">
+        <h2>Add Product to cart</h2>
+        <input type="text" id="product_name" placeholder="product name" name="product_name" />
+        <input type="number" id="product_quantity" placeholder="product quantity" name="product_quantity" value="1" />
+        <select id="product_payment_type" name="product_payment_type">
+          <option value="cash">Cash</option>
+          <option value="online">Online</option>
+          <option value="card">Card</option>
+          <option value="check">Check</option>
+        </select>
+        <p id="error-message" style="color: red"></p>
+        <!-- <input type="button" onclick="Addproduct()" value="Save"> -->
+        <button onclick="Addproduct()">Save</button>
+      </div>
+    </div>
+
+    <button type="button" onclick="window.location.href='{{ url_for('logout') }}'" id="logoutBtn">
+      Logout
+    </button>
+
+    <script>
+      const closebtn = document.getElementById("closeModal");
+      const openbtn = document.getElementById("openModal");
+      const modal = document.getElementById("modal");
+
+      openbtn.addEventListener("click", () => {
+        modal.classList.toggle("open");
+      });
+
+      closebtn.addEventListener("click", () => {
+        modal.classList.remove("open");
+      });
+
+      function showError(message) {
+        document.getElementById("error-message").textContent = message;
+      }
+
+      function clearError() {
+        document.getElementById("error-message").textContent = "";
+      }
+
+      async function Addproduct() {
+        clearError();
+
+        const product_name = document.getElementById("product_name").value.trim();
+        const product_quantity = document.getElementById("product_quantity").value.trim();
+        const product_payment_type = document.getElementById("product_payment_type").value;
+
+        if (!product_name) {
+          showError("Enter Product name to continue");
+          return;
+        }
+
+        const fd = new FormData();
+        fd.append("product_name", product_name);
+        fd.append("product_quantity", product_quantity);
+        fd.append("product_payment_type", product_payment_type);
+
+        try {
+          const res = await fetch("/api/product/add", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        product_name,
+        product_quantity,
+        product_payment_type
+    })
+});
+          const data = await res.json();   //*--------> Converts to Json
+
+          if (res.ok) {
+            window.location.href = "/home";
+            
+          } else {
+            showError(data.error || "Something went wrong.");
+          }
+        } catch (err) {
+          showError("Network error. Please check your connection.");
+          console.error(err);
+        }
+      }
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          Addproduct();
+        }
+      });
+    </script>
   </body>
 </html>

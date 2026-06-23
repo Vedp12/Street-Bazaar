@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form action="/home" method="post">
+      <input
+        type="text"
+        id="product_name"
+        name="product_name"
+        placeholder="Enter name"
+      />
+      <input
+        id="product_quantity"
+        type="number"
+        name="product_quantity"
+        placeholder="Enter quantity"
+        value="1"
+      />
+      <select name="Payment_type" id="payment_type">
+        <option value="opetion_cash">Cash</option>
+        <option value="opetion_online">Online</option>
+        <option value="opetion_card">Card</option>
+        <option value="opetion_check">Check</option>
+      </select>
+      <button onclick="sendData()" type="submit">Submit</button>
+    </form>
+    <script>
+      function sendData() {
+        const productName = document.getElementById("product_name");
+        const paymentType = document.getElementById("payment_type").value;
+        fetch("/api/payment", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            payment_type: paymentType,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => console.log(data));
+      }
+    </script>
+  </body>
+</html>
