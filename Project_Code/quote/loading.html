@@ -1,0 +1,110 @@
+
+<style>
+.progress-card {
+  background: var(--color-background-primary);
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-lg);
+  padding: 1.5rem 1.25rem;
+  text-align: center;
+  width: 240px;
+  margin: 1.5rem auto;
+}
+.progress-card h2 {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  margin: 0 0 1.25rem;
+  letter-spacing: 0.01em;
+}
+.ring-wrap {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 1.25rem;
+}
+.ring-wrap svg {
+  transform: rotate(-90deg);
+}
+.ring-track {
+  fill: none;
+  stroke: var(--color-border-tertiary);
+  stroke-width: 10;
+}
+.ring-fill {
+  fill: none;
+  stroke: var(--color-text-success);
+  stroke-width: 10;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.5s ease;
+}
+.ring-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.ring-label span {
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  line-height: 1;
+}
+.ring-label small {
+  font-size: 11px;
+  color: var(--color-text-tertiary);
+  margin-top: 2px;
+}
+.input-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.input-row label {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+.input-row input {
+  width: 60px;
+  text-align: center;
+  padding: 4px 8px;
+  font-size: 13px;
+}
+</style>
+
+<div class="progress-card">
+  <h2>Complete your profile</h2>
+  <div class="ring-wrap">
+    <svg width="120" height="120" viewBox="0 0 120 120">
+      <circle class="ring-track" cx="60" cy="60" r="50"/>
+      <circle class="ring-fill" id="ringFill" cx="60" cy="60" r="50"/>
+    </svg>
+    <div class="ring-label">
+      <span id="ringLabel">85%</span>
+      <small>complete</small>
+    </div>
+  </div>
+  <div class="input-row">
+    <label for="progressInput">Progress</label>
+    <input type="number" id="progressInput" min="0" max="100" value="85" oninput="updateProgress()">
+  </div>
+</div>
+
+<script>
+function updateProgress() {
+  const raw = document.getElementById('progressInput').value;
+  const pct = Math.min(Math.max(parseInt(raw) || 0, 0), 100);
+  const r = 50;
+  const circ = 2 * Math.PI * r;
+  const offset = circ * (1 - pct / 100);
+  const fill = document.getElementById('ringFill');
+  fill.style.strokeDasharray = circ;
+  fill.style.strokeDashoffset = offset;
+  document.getElementById('ringLabel').textContent = pct + '%';
+}
+document.addEventListener('DOMContentLoaded', updateProgress);
+updateProgress();
+</script>
+
