@@ -1,81 +1,78 @@
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-      Sign Up
-    </title>
+    <title>Sign Up</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #f4f7f6; }
+        .container { background-color: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center; width: 400px; }
+        .inputs_form { margin-bottom: 20px; text-align: left; }
+        h1, h2, h3 { color: #333; }
+        h3 { margin-top: 15px; margin-bottom: 5px; font-size: 1em; color: #555; }
+        input[type="text"], input[type="email"], input[type="password"], input[type="file"], select { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        img#image-preview { max-width: 100px; max-height: 100px; margin-top: 10px; border-radius: 4px; border: 1px solid #ccc;}
+        .error-message { color: #d9534f; background-color: #f2dede; border: 1px solid #ebccd1; padding: 10px; border-radius: 4px; margin-bottom: 15px; display: none; }
+        .error-message.show { display: block; } /* Use a class for showing */
+        .btn-primary { background-color: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 1em; transition: background-color 0.3s ease; width: 100%; }
+        .btn-primary:hover { background-color: #218838; }
+        .btn-primary.loading { background-color: #cccccc; cursor: not-allowed; }
+        .auth-footer { font-size: 0.9em; color: #555; margin-top: 20px; }
+        .auth-footer a { color: #007bff; text-decoration: none; }
+        .auth-footer a:hover { text-decoration: underline; }
+    </style>
   </head>
   <body>
-    <h1>
-      Main Code
-    </h1>
-    <div class="inputs_form">
-      <h3>
-        Image data
-      </h3>
-      <input type="file" accept="image/*" name="avatar" id="avatar" onchange="previewImage(event)">
-      <img id="image-preview" alt="Image Preview">
-      <h3>
-        Name
-      </h3>
-      <input type="text" placeholder="name" name="name" autocomplete="name" id="name" required="">
-      <h3>
-        Email
-      </h3>
-      <input type="email" name="email" id="email" autocomplete="email" required="">
-      <h3>
-        Shop name
-      </h3>
-      <input type="text" placeholder="shop name" name="shop_name" id="shop" required="">
-      <h3>
-        Password
-      </h3>
-      <input type="password" name="password" id="password" required="">
-      <h3>
-        Confirm password
-      </h3>
-      <input type="password" name="confirm_password" id="confirm_password" required="">
-      <p id="error-message" class="error-message">
-      </p>
-      <button class="btn-primary" id="signup-btn" onclick="handleSignup()">
-        <span id="btn-text">
-          Create Account →
-        </span>
-      </button>
+    <div class="container">
+      <h1>Create Your Account</h1>
+      <div class="inputs_form">
+        <h3>Profile Picture</h3>
+        <input type="file" accept="image/*" name="avatar" id="avatar">
+        <img id="image-preview" src="#" alt="Image Preview" style="display:none;"/>
+
+        <h3>Name</h3>
+        <input type="text" placeholder="Your Name" name="name" id="name" autocomplete="name" required>
+
+        <h3>Email</h3>
+        <input type="email" placeholder="yourshop@example.com" name="email" id="email" autocomplete="email" required>
+
+        <h3>Shop Name</h3>
+        <input type="text" placeholder="Your Shop Name" name="shop_name" id="shop_name" required>
+
+        <h3>Password</h3>
+        <input type="password" placeholder="At least 6 characters" name="password" id="password" required>
+
+        <h3>Confirm Password</h3>
+        <input type="password" placeholder="Confirm your password" name="confirm_password" id="confirm_password" required>
+        
+        <div id="error-message" class="error-message"></div>
+
+        <button class="btn-primary" id="signup-btn">
+          <span id="btn-text">Create Account →</span>
+        </button>
+      </div>
       <p class="auth-footer">
-        Already a user?
-        <a href="{{ url_for('login') }}">
-          Log in
-        </a>
+        Already have an account?
+        <a href="{{ url_for('login') }}">Log in</a>
       </p>
     </div>
+    
     <script>
-      // Preview uploaded image
-      function previewImage(event) {
-        const file = event.target.files[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            const preview = document.getElementById("image-preview");
-            preview.src = e.target.result;
-            preview.style.display = "block";
-          };
-          reader.readAsDataURL(file);
-        }
-      }
+      const avatarInput = document.getElementById('avatar');
+      const imagePreview = document.getElementById('image-preview');
+      const errorMessageEl = document.getElementById('error-message');
+      const signupBtn = document.getElementById('signup-btn');
+      const btnTextSpan = document.getElementById('btn-text');
 
       // Show error message
       function showError(message) {
-        const errorElement = document.getElementById("error-message");
-        errorElement.textContent = message;
-        errorElement.style.display = "block";
+        errorMessageEl.textContent = message;
+        errorMessageEl.classList.add('show');
       }
 
       // Hide error message
       function hideError() {
-        const errorElement = document.getElementById("error-message");
-        errorElement.style.display = "none";
+        errorMessageEl.classList.remove('show');
       }
 
       // Validate email format
@@ -84,19 +81,35 @@
         return re.test(email);
       }
 
+      // Preview selected image
+      avatarInput.addEventListener('change', function() {
+        const file = this.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            imagePreview.src = e.target.result;
+            imagePreview.style.display = 'block'; // Show the image preview
+          }
+          reader.readAsDataURL(file);
+        } else {
+          imagePreview.src = '#';
+          imagePreview.style.display = 'none'; // Hide if no file selected
+        }
+      });
+
       // Handle signup
       async function handleSignup() {
         hideError();
+
         const name = document.getElementById("name").value.trim();
         const email = document.getElementById("email").value.trim();
         const password = document.getElementById("password").value.trim();
-        const confirmPassword = document .getElementById("confirm_password")
-          .value.trim();
-        const shopName = document.getElementById("shop").value.trim();
-        const avatar = document.getElementById("avatar").files[0];
+        const confirmPassword = document.getElementById("confirm_password").value.trim();
+        const shopName = document.getElementById("shop_name").value.trim();
+        const avatarFile = document.getElementById("avatar").files[0];
 
         // Validate fields
-        if (!name || !email || !password || !confirmPassword || !shopName) {
+        if (!name || !email || !shopName || !password || !confirmPassword) {
           showError("Please fill in all fields.");
           return;
         }
@@ -114,43 +127,54 @@
         }
 
         // Set loading state
-        const btn = document.getElementById("signup-btn");
-        const lbl = document.getElementById("btn-text");
-        btn.classList.add("loading");
-        lbl.textContent = "Creating account…";
+        signupBtn.classList.add("loading");
+        btnTextSpan.textContent = "Creating account…";
+        signupBtn.disabled = true; // Disable button while loading
 
-        // Prepare FormData
-        const fd = new FormData();
-        fd.append("name", name);
-        fd.append("email", email);
-        fd.append("password", password);
-        fd.append("confirm_password", confirmPassword);   // <-- ADD THIS LINE
-        fd.append("shop_name", shopName);
-        if (avatar) fd.append("avatar", avatar);
+        // Prepare FormData for sending to the backend
+        const formData = new FormData();
+        formData.append("name", name);
+        formData.append("email", email);
+        formData.append("shop_name", shopName);
+        formData.append("password", password);
+        formData.append("confirm_password", confirmPassword); // Not strictly needed by backend but harmless
+        if (avatarFile) {
+          formData.append("avatar", avatarFile);
+        }
 
         try {
           const res = await fetch("/api/signup", {
             method: "POST",
-            body: fd,
+            body: formData, // Send FormData directly
+            // Do NOT set 'Content-Type' header here; browser sets it for FormData automatically (multipart/form-data)
           });
           const data = await res.json();
+
           if (res.ok) {
-            window.location.href = "/home";
+            // Signup successful, redirect to home
+            window.location.href = "/home"; 
           } else {
-            showError(data.error || "Something went wrong.");
-            btn.classList.remove("loading");
-            lbl.textContent = "Create Account →";
+            // Display error message from backend
+            showError(data.error || "Something went wrong during signup.");
           }
-        } catch (_) {
+        } catch (err) {
+          console.error("Signup network error:", err);
           showError("Network error. Please check your connection.");
-          btn.classList.remove("loading");
-          lbl.textContent = "Create Account →";
+        } finally {
+          // Reset button state
+          signupBtn.classList.remove("loading");
+          btnTextSpan.textContent = "Create Account →";
+          signupBtn.disabled = false;
         }
       }
 
-      // Handle Enter key
+      // Event listeners
+      signupBtn.addEventListener("click", handleSignup);
+
+      // Handle Enter key submission from input fields
       document.addEventListener("keydown", (e) => {
         if (e.key === "Enter" && e.target.tagName === "INPUT") {
+          e.preventDefault(); // Prevent default form submission behavior
           handleSignup();
         }
       });

@@ -1,4 +1,3 @@
-# *Modules------------------------------------------------------------------------------------------------------------------------------------------------
 from flask import (
     Flask,
     render_template,
@@ -6,41 +5,46 @@ from flask import (
     redirect,
     url_for,
     session,
-    send_from_directory,
     jsonify,
     flash,
+    Blueprint,
+    send_from_directory,
 )
+
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from PIL import Image
+
 from templates.Database.models import db, Authentacation, ProductData
+from functools import wraps
 import os
 import uuid
-from functools import wraps
 
-# ^Image--------------------------------------------------------------------------------------------------------------------------------------------------
-UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), "static", "uploads")
+
+UPLOAD_FOLDER = os.path.join("static", "uploads")
 ALLOWED_EXT = {"png", "jpg", "jpeg"}
 MAX_IMG_SIZE = (300, 300)
 
-# *Config-------------------------------------------------------------------------------------------------------------------------------------------------
-app = Flask(__name__)
 
+app = Flask(__name__)
 app.config["SECRET_KEY"] = "R7^2KX@Iv@8Dr*z8"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///Street_bazaar.db"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
 app.config["MAX_CONTENT_LENGTH"] = 4 * 1024 * 1024
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 
-# ^Initialize---------------------------------------------------------------------------------------------------------------------
+os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
+
+
 db.init_app(app)
+
+
 with app.app_context():
     db.create_all()
 
 
-#!Image--------------------------------------------------------------------------------------------------------------------------------------------------
 def allowed_file(filename: str) -> bool:
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXT
 
@@ -48,242 +52,295 @@ def allowed_file(filename: str) -> bool:
 def save_avatar(file_storage) -> str | None:
     if not file_storage or file_storage.filename == "":
         return None
-    if not allowed_file(file_storage.filename):
+
+    filename_original = secure_filename(file_storage.filename)
+    if not allowed_file(filename_original):
         return None
 
-    ext = file_storage.filename.rsplit(".", 1)[1].lower()
-    filename = f"{uuid.uuid4().hex}.{ext}"
-    path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+    try:
+        ext = filename_original.rsplit(".", 1)[1].lower()
+        unique_filename = f"{uuid.uuid4().hex}.{ext}"
+        path = os.path.join(app.config["UPLOAD_FOLDER"], unique_filename)
 
-    # Resize/crop to thumbnail with Pillow to save disk space
-    img = Image.open(file_storage.stream).convert("RGB")
-    img.thumbnail(MAX_IMG_SIZE, Image.LANCZOS)
-    img.save(path, optimize=True, quality=85)
-    return filename
+        img = Image.open(file_storage.stream).convert("RGB")
+        img.thumbnail(MAX_IMG_SIZE, Image.Resampling.LANCZOS)
+        img.save(path, optimize=True, quality=85)
+        return unique_filename
+    except Exception as e:
+        app.logger.error(f"Error saving avatar: {e}")
+        return None
 
 
 def delete_old_avatar(filename: str | None):
-    """Remove a previously saved avatar file from disk."""
     if not filename:
         return
     path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
     if os.path.exists(path):
-        os.remove(path)
+        try:
+            os.remove(path)
+        except OSError as e:
+            app.logger.error(f"Error deleting avatar {filename}: {e}")
 
 
-# *Session------------------------------------------------------------------------------------------------------------------------------------------------
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if "user_id" not in session:
             flash("Please log in to access this page.", "warning")
             return redirect(url_for("login"))
-        return f(*args, **kwargs)
+
+        user = Authentacation.query.get(session["user_id"])
+        if not user:
+            session.clear()
+            flash("Your account seems to be missing. Please log in again.", "error")
+            return redirect(url_for("login"))
+
+        return f(user, *args, **kwargs)
 
     return decorated_function
 
 
-# *RestApi------------------------------------------------------------------------------------------------------------------------------------------------
-
-# ^Signup-------------------------------------------------------------------------------------------------------------------------------------------------
-
-
 @app.route("/api/signup", methods=["POST"])
 def api_signup():
-    name = (request.form.get("name") or "").strip()
-    email = (request.form.get("email") or "").strip()
-    shop_name = (request.form.get("shop_name") or "").strip()
-    password = (request.form.get("password") or "").strip()
-    confirm_password = (request.form.get("confirm_password") or "").strip()
 
-    if not name or not email or not shop_name or not password or not confirm_password:
+    name = request.form.get("name", "").strip()
+    email = request.form.get("email", "").strip().lower()
+    shop_name = request.form.get("shop_name", "").strip()
+    password = request.form.get("password", "").strip()
+    confirm_password = request.form.get("confirm_password", "").strip()
+    avatar_file = request.files.get("avatar")
+
+    if not all([name, email, shop_name, password, confirm_password]):
         return jsonify({"error": "All fields are required"}), 400
-    if len(password) < 6 or len(confirm_password) < 6:
+    if len(password) < 6:
         return jsonify({"error": "Password must be at least 6 characters"}), 400
     if password != confirm_password:
-        return jsonify({"error": "Passwords must match"}), 401
+        return jsonify({"error": "Passwords do not match"}), 400
+
     if Authentacation.query.filter_by(email=email).first():
-        return jsonify({"error": "Email already registered"}), 409
+        return jsonify({"error": "Email is already registered"}), 409
 
-    avatar_file = request.files.get("avatar")
-    avatar_name = save_avatar(avatar_file)
+    avatar_filename = save_avatar(avatar_file)
+    if avatar_file and not avatar_filename:
+        return (
+            jsonify(
+                {"error": "Invalid file type for avatar. Allowed: png, jpg, jpeg."}
+            ),
+            400,
+        )
 
-    hashed = generate_password_hash(password)
-    authentacation = Authentacation(
+    hashed_password = generate_password_hash(password)
+
+    new_user = Authentacation(
         name=name,
         email=email,
-        password=hashed,
         shop_name=shop_name,
-        avatar=avatar_name,
+        password=hashed_password,
+        avatar=avatar_filename,
     )
-    db.session.add(authentacation)
-    db.session.commit()
 
-    session["user_id"] = authentacation.id
-    session["user_name"] = authentacation.name
-    session["user_avatar"] = authentacation.avatar_url()
+    try:
+        db.session.add(new_user)
+        db.session.commit()
 
-    return jsonify({"message": "Account created successfully"}), 201
+        session["user_id"] = new_user.id
+        session["user_name"] = new_user.name
+
+        return (
+            jsonify(
+                {
+                    "message": "Account created and logged in successfully",
+                    "user_id": new_user.id,
+                }
+            ),
+            201,
+        )
+    except Exception as e:
+        db.session.rollback()
+        app.logger.error(f"Error during signup: {e}")
+
+        if avatar_filename:
+            delete_old_avatar(avatar_filename)
+        return (
+            jsonify(
+                {"error": "An internal error occurred during signup. Please try again."}
+            ),
+            500,
+        )
 
 
-# ^Login--------------------------------------------------------------------------------------------------------------------------------------------------
 @app.route("/api/login", methods=["POST"])
 def api_login():
-    data = request.get_json(silent=True)
-    if not data:
-        return jsonify({"error": "JSON body required"}), 400
+    data = request.get_json(silent=True) or {}
 
-    email = (data.get("email") or "").strip()
-    password = (data.get("password") or "").strip()
+    email = data.get("email", "").strip().lower()
+    password = data.get("password", "").strip()
+
     if not email or not password:
-        return jsonify({"error": "All fields are required"}), 400
+        return jsonify({"error": "Email and password are required"}), 400
 
-    authentacation = Authentacation.query.filter_by(email=email).first()
-    if not authentacation or not check_password_hash(authentacation.password, password):
+    user = Authentacation.query.filter_by(email=email).first()
+
+    if user and check_password_hash(user.password, password):
+        session["user_id"] = user.id
+        session["user_name"] = user.name
+
+        return jsonify({"message": "Login successful", "user_id": user.id}), 200
+    else:
         return jsonify({"error": "Invalid email or password"}), 401
 
-    session["user_id"] = authentacation.id
-    session["user_name"] = authentacation.name
-    session["user_avatar"] = authentacation.avatar_url()
-    return jsonify({"message": "Login successful"}), 200
 
-
-# ^Logout-------------------------------------------------------------------------------------------------------------------------------------------------
 @app.route("/api/logout", methods=["POST"])
+@login_required
 def api_logout():
+    user_id_to_clear = session.get("user_id")
     session.clear()
-    return jsonify({"message": "Logged out"}), 200
+    app.logger.info(f"User {user_id_to_clear} logged out.")
+    return jsonify({"message": "Logged out successfully"}), 200
 
-# ^Add Product--------------------------------------------------------------------------------------------------------------------
+
 @app.route("/api/product/add", methods=["POST"])
-def api_add_product():
-    data = request.get_json(silent=True)
+@login_required
+def api_add_product(current_user):
+    data = request.get_json(silent=True) or {}
 
-    Product_name = (data.get("Product_name") or "").strip()
-    Product_quantity = (data.get("Product_quantity") or "").strip()
-    Product_payment_type = (data.get("Product_payment_type") or "").strip()
+    product_name = data.get("Product_name", "").strip()
+    product_quantity_raw = data.get("Product_quantity")
+    product_payment_type = data.get("Product_payment_type", "").strip()
 
-    if not Product_name or not Product_quantity or not Product_payment_type:
-        return jsonify({"error": "All fields are required"}), 400
+    if not product_name or product_quantity_raw is None or not product_payment_type:
+        return (
+            jsonify({"error": "Product name, quantity, and payment type are required"}),
+            400,
+        )
+
     try:
-        Product_quantity = int(Product_quantity)
-    except ValueError:
-        return jsonify({"error": "Quantity must be in number"}), 400
-    if Product_quantity <= 0 or Product_quantity is None:
-        Product_quantity = 1
-    add_product = ProductData(
-        Product_name=Product_name,
-        Product_quantity=Product_quantity,
-        Product_payment_type=Product_payment_type,
-    )
-    db.session.add(add_product)
-    db.session.commit()
+        product_quantity = int(product_quantity_raw)
+        if product_quantity <= 0:
+            product_quantity = 1
+    except (ValueError, TypeError):
+        return jsonify({"error": "Product quantity must be a valid number"}), 400
 
-    return (
-        jsonify(
-            {
-                "Add": {
-                    "id": add_product.Product_id,
-                    "data": {
-                        "Product Name": add_product.Product_name,
-                        "Product Quantity": add_product.Product_quantity,
-                        "Product PaymentType": add_product.Product_payment_type,
-                    },
+    new_product = ProductData(
+        Product_name=product_name,
+        Product_quantity=product_quantity,
+        Product_payment_type=product_payment_type,
+        user_id=current_user.id,
+    )
+
+    try:
+        db.session.add(new_product)
+        db.session.commit()
+        return (
+            jsonify(
+                {
+                    "message": "Product added successfully",
+                    "product": new_product.to_dict(),
                 }
-            }
-        ),
-        201,
-    )
+            ),
+            201,
+        )
+    except Exception as e:
+        db.session.rollback()
+        app.logger.error(f"Error adding product for user {current_user.id}: {e}")
+        return (
+            jsonify({"error": "An internal error occurred while adding the product."}),
+            500,
+        )
 
 
-# ^Get all Product-----------------------------------------------------------------------------------------------------------------
 @app.route("/api/products", methods=["GET"])
-def get_all_products():
+@login_required
+def get_all_products(current_user):
 
-    product = ProductData.query.all()
+    products = ProductData.query.filter_by(user_id=current_user.id).all()
 
-    return jsonify(
-        [
-            {
-                "id": products.Product_id,
-                "Product_name": products.Product_name,
-                "Product_quantity": products.Product_quantity,
-                "Product_payment_type": products.Product_payment_type,
-            }
-            for products in product
-        ]
-    )
+    product_list = [p.to_dict() for p in products]
 
-    # if not ProductData_delet
+    return jsonify(product_list), 200
 
 
-# ^Delete Product-----------------------------------------------------------------------------------------------------------------
-# @app.route("/api/product/delete/<int:Product_id>",methods=["DELETE"])
-# def adi_delete_product(Product_id):
-#     ProductData_delete = ProductData.query.get(Product_id)
-#     if not ProductData_delete:
-#         return jsonify({"Error":"Data not found"}),404
-#     db.session.delete(ProductData_delete)
-#     db.session.commit()
-#     return jsonify({"Delete":"Data Deleted successfull"}),204
+@app.route("/api/products/<int:product_id>", methods=["DELETE"])
+@login_required
+def delete_product(current_user, product_id: int):
 
-# @app.route("/api/products/<int:Product_id>", methods=["DELETE"])
-# def delete_product(Product_id):
+    product = ProductData.query.filter_by(
+        Product_id=product_id, user_id=current_user.id
+    ).first()
 
-#     product = ProductData.query.get(Product_id)
+    if not product:
+        return (
+            jsonify(
+                {
+                    "error": "Product not found or you do not have permission to delete it."
+                }
+            ),
+            404,
+        )
 
-#     if not product:
-#         return jsonify({"error": "Product not found"}), 404
+    try:
+        db.session.delete(product)
+        db.session.commit()
+        return (
+            jsonify({"message": f"Product with ID {product_id} deleted successfully."}),
+            200,
+        )
+    except Exception as e:
+        db.session.rollback()
+        app.logger.error(
+            f"Error deleting product {product_id} for user {current_user.id}: {e}"
+        )
+        return (
+            jsonify(
+                {"error": "An internal error occurred while deleting the product."}
+            ),
+            500,
+        )
 
-#     db.session.delete(product)
-#     db.session.commit()
 
-#     return jsonify({
-#         "message": "Product deleted successfully"
-#     }), 200
-# *Backend------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-# ^Signup-------------------------------------------------------------------------------------------------------------------------------------------------
 @app.route("/signup")
 def signup():
-    # Redirect to home if already logged in
+
     if "user_id" in session:
         return redirect(url_for("home"))
     return render_template("AuthPage/signup.html")
 
 
-# ^Login--------------------------------------------------------------------------------------------------------------------------------------------------
 @app.route("/login", methods=["GET"])
 def login():
-    # If user is already logged in, redirect to home
+
     if "user_id" in session:
         return redirect(url_for("home"))
     return render_template("AuthPage/login.html")
 
 
-# ^Logout-------------------------------------------------------------------------------------------------------------------------------------------------
 @app.route("/logout")
 def logout():
+
+    user_id_to_clear = session.get("user_id")
     session.clear()
-    return redirect("login")
+    app.logger.info(f"User {user_id_to_clear} logged out via page redirect.")
+
+    return redirect(url_for("login"))
 
 
-# ^Landing------------------------------------------------------------------------------------------------------------------------------------------------
 @app.route("/")
 def landing():
+
+    if "user_id" in session:
+        return redirect(url_for("home"))
     return render_template("temps/landing.html")
 
 
-# ^Home---------------------------------------------------------------------------------------------------------------------------------------------------
 @app.route("/home")
 @login_required
-def home():
-    # Fetch the user using the ID from the session
-    user = Authentacation.query.get(session["user_id"])
-    Products = ProductData.query.all()
-    return render_template("home/home.html", user=user, Products=Products)
+def home(current_user):
+
+    products = ProductData.query.filter_by(user_id=current_user.id).all()
+
+    return render_template("home/home.html", user=current_user, Products=products)
 
 
 if __name__ == "__main__":
+
     app.run(debug=True, port=8001)

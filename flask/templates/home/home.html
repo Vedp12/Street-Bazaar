@@ -1,223 +1,330 @@
+<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Home - {{ user.name }}</title>
+        <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
         <style>
+            /* Basic modal styling */
             .modal {
-        background-color: rgb(212, 206, 206);
-        opacity: 0;
-        height: 20%;
-        transition: all 0.3s ease-in-out;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .modal.open {
-        opacity: 1;
-        z-index: 999;
-      }
+                display: none; /* Hidden by default */
+                position: fixed; /* Stay in place */
+                z-index: 1000; /* Sit on top */
+                left: 0;
+                top: 0;
+                width: 100%; /* Full width */
+                height: 100%; /* Full height */
+                overflow: auto; /* Enable scroll if needed */
+                background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+                align-items: center; /* Center vertically */
+                justify-content: center; /* Center horizontally */
+            }
+            .modal.open {
+                display: flex; /* Use flex to center content */
+            }
+            .modal-content {
+                background-color: #fefefe;
+                margin: auto;
+                padding: 20px;
+                border: 1px solid #888;
+                width: 80%; /* Could be more responsive */
+                max-width: 500px;
+                border-radius: 8px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            }
+            .close-button {
+                color: #aaa;
+                float: right;
+                font-size: 28px;
+                font-weight: bold;
+                cursor: pointer;
+            }
+            .close-button:hover,
+            .close-button:focus {
+                color: black;
+                text-decoration: none;
+            }
+            .Product_section input, .Product_section select {
+                margin-bottom: 10px;
+                padding: 8px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                width: calc(100% - 16px); /* Adjust for padding */
+            }
+            .Product_section button {
+                background-color: #007bff;
+                color: white;
+                padding: 10px 15px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+            .Product_section button:hover {
+                background-color: #0056b3;
+            }
+            .error-message {
+                color: #d9534f;
+                margin-top: 10px;
+                font-size: 0.9em;
+            }
+            #product-table th, #product-table td {
+                vertical-align: middle; /* Align content vertically */
+            }
         </style>
-        <title>
-            Home - {{ user.name }}
-        </title>
     </head>
     <body>
-        <h1>
-            Welcome, {{ user.name }}!
-        </h1>
-        {% if user.avatar %}
-        <img src="{{ url_for('static', filename='uploads/' + user.avatar) }}" alt="Profile Picture" style="width: 150px; border-radius: 50%">
-        {% else %}
-        <p>
-            No avatar uploaded.
-        </p>
-        {% endif %}
-        <div class="user-details">
-            <p>
-                <strong>
-                    Shop Name:
-                </strong>
-                {{ user.shop_name }}
-            </p>
-            <p>
-                <strong>
-                    Email:
-                </strong>
-                {{ user.email }}
-            </p>
-        </div>
-        <button id="openModal">
-            Open Modal
-        </button>
-        <div class="modal" id="modal">
-            <button id="closeModal" type="button">
-                Close
-            </button>
-            <br>
-            <div class="Product_section">
-                <h2>
-                    Add Product to cart
-                </h2>
-                <input type="text" id="Product_name" placeholder="product name" name="Product_name">
-                <input type="number" id="Product_quantity" placeholder="product quantity" name="Product_quantity" value="1">
-                <select id="Product_payment_type" name="Product_payment_type">
-                    <option value="cash">
-                        Cash
-                    </option>
-                    <option value="online">
-                        Online
-                    </option>
-                    <option value="card">
-                        Card
-                    </option>
-                    <option value="check">
-                        Check
-                    </option>
-                </select>
-                <p id="error-message" style="color: red">
-                </p>
-                <!-- <input type="button" onclick="Addproduct()" value="Save"> -->
-                <button onclick="Addproduct()">
-                    Save
-                </button>
+        <div class="container mt-4">
+            <h1>Welcome, {{ user.name }}!</h1>
+            
+            {% if user.avatar_url %}
+            <img src="{{ user.avatar_url }}" alt="Profile Picture" class="rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+            {% else %}
+            <p class="text-muted mb-3">No avatar uploaded.</p>
+            {% endif %}
+
+            <div class="user-details mb-4">
+                <p><strong>Shop Name:</strong> {{ user.shop_name }}</p>
+                <p><strong>Email:</strong> {{ user.email }}</p>
             </div>
-        </div>
-        
-        
-          <table class="table">
-              <thead>
-                  <tr>
-                      <th scope="col">
-                          No
-                      </th>
-                      <th scope="col">
-                          Product Name
-                      </th>
-                      <th scope="col">
-                          Quantity
-                      </th>
-                      <th scope="col">
-                          Payment type
-                      </th>
-                      <th>Total</th>
-                      <th scope="col">
-                          Action
-                      </th>
-                  </tr>
-              </thead>
-              <tbody>
-                {% for Product in Products %}
-                  <tr>
-                      <th scope="row">
-                          {{ Product.counter }}
-                      </th>
-                      <td>
-                          {{ Product.Product_name }}
-                      </td>
-                      <td>
-                          {{ Product.Product_quantity }}
-                      </td>
-                      <td>
-                          {{ Product.Product_payment_type }}
-                      </td>
-                      <td>400</td>
-                      <td>
-                          <button id="openview" type="button" class="btn btn-outline-warning">
-                            View
-                          </button>
-                          <div id="View" class="View">
-                            <h3>Product name</h3>
-                            <p>
-                              <!--*
-                              1. quantity
-                              2. payment type
-                              4. total
-                              3. remaineing
-                              -->
-                            </p>
-                          </div>
-                          <button class="btn btn-primary" type="submit">
-                              share
-                          </button>
-                      </td>
+
+            <button id="openModalBtn" class="btn btn-primary mb-4">Add New Product</button>
+
+            <!-- The Modal -->
+            <div id="productModal" class="modal">
+                <div class="modal-content">
+                    <span class="close-button" id="closeModalBtn">&times;</span>
+                    <h2>Add Product</h2>
+                    <div class="Product_section">
+                        <input type="text" id="Product_name" placeholder="Product Name" name="Product_name">
+                        <input type="number" id="Product_quantity" placeholder="Quantity" name="Product_quantity" value="1" min="1">
+                        <select id="Product_payment_type" name="Product_payment_type">
+                            <option value="cash">Cash</option>
+                            <option value="online">Online</option>
+                            <option value="card">Card</option>
+                            <option value="check">Check</option>
+                        </select>
+                        <p id="modal-error-message" class="error-message"></p>
+                        <button onclick="addProduct()">Save Product</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Product Table -->
+            <h2>Your Products</h2>
+            <table id="product-table" class="table table-striped table-hover mt-3">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Product Name</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Payment Type</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in Products %}
+                    <tr id="product-row-{{ product.id }}">
+                        <th scope="row">{{ loop.index }}</th>
+                        <td>{{ product.product_name }}</td>
+                        <td>{{ product.product_quantity }}</td>
+                        <td>{{ product.product_payment_type }}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-warning view-product-btn" data-product-id="{{ product.id }}">View</button>
+                            <button class="btn btn-sm btn-danger delete-product-btn" data-product-id="{{ product.id }}">Delete</button>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center">No products added yet.</td>
                     </tr>
                     {% endfor %}
-              </tbody>
-          </table>
-        <button type="button" onclick="window.location.href='{{ url_for('logout') }}'" id="logoutBtn">
-            Logout
-        </button>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
-        </script>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Bootstrap JS Bundle -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
         <script>
-            const closebtn = document.getElementById("closeModal");
-      const openbtn = document.getElementById("openModal");
-      const modal = document.getElementById("modal");
+            // --- Modal Controls ---
+            const modal = document.getElementById("productModal");
+            const openModalBtn = document.getElementById("openModalBtn");
+            const closeModalBtn = document.getElementById("closeModalBtn");
+            const modalErrorMessageEl = document.getElementById("modal-error-message");
 
-      openbtn.addEventListener("click", () => {
-        modal.classList.toggle("open");
-      });
+            openModalBtn.addEventListener("click", () => {
+                modal.classList.add("open"); // Show modal
+                // Clear previous input values and errors
+                document.getElementById("Product_name").value = "";
+                document.getElementById("Product_quantity").value = "1";
+                document.getElementById("Product_payment_type").value = "cash";
+                modalErrorMessageEl.textContent = "";
+            });
 
-      closebtn.addEventListener("click", () => {
-        modal.classList.remove("open");
-      });
+            closeModalBtn.addEventListener("click", () => {
+                modal.classList.remove("open"); // Hide modal
+            });
 
-      function showError(message) {
-        document.getElementById("error-message").textContent = message;
-      }
+            // Close modal if user clicks outside of the modal-content
+            window.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    modal.classList.remove("open");
+                }
+            });
 
-      function clearError() {
-        document.getElementById("error-message").textContent = "";
-      }
+            // --- Helper Functions ---
+            function showModalError(message) {
+                modalErrorMessageEl.textContent = message;
+            }
 
-      async function Addproduct() {
-        clearError();
+            function clearModalError() {
+                modalErrorMessageEl.textContent = "";
+            }
 
-        const Product_name = document.getElementById("Product_name").value.trim();
-        const Product_quantity = document.getElementById("Product_quantity").value.trim();
-        const Product_payment_type = document.getElementById("Product_payment_type").value;
+            // --- API Functions ---
+            async function addProduct() {
+                clearModalError();
 
-        if (!Product_name) {
-          showError("Enter Product name to continue");
-          return;
-        }
+                const productNameInput = document.getElementById("Product_name");
+                const productQuantityInput = document.getElementById("Product_quantity");
+                const productPaymentTypeInput = document.getElementById("Product_payment_type");
 
-        const fd = new FormData();
-        fd.append("Product_name", Product_name);
-        fd.append("Product_quantity", Product_quantity);
-        fd.append("Product_payment_type", Product_payment_type);
+                const productName = productNameInput.value.trim();
+                const productQuantity = productQuantityInput.value.trim();
+                const productPaymentType = productPaymentTypeInput.value;
 
-        try {
-          const res = await fetch("/api/product/add", {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-        Product_name,
-        Product_quantity,
-        Product_payment_type
-    })
-});
-          const data = await res.json();   //*--------> Converts to Json
+                if (!productName) {
+                    showModalError("Product name is required.");
+                    return;
+                }
+                if (!productQuantity || parseInt(productQuantity) <= 0) {
+                    showModalError("Please enter a valid quantity (at least 1).");
+                    return;
+                }
 
-          if (res.ok) {
-            window.location.href = "/home";
+                const productData = {
+                    Product_name: productName,
+                    Product_quantity: parseInt(productQuantity), // Ensure it's an integer
+                    Product_payment_type: productPaymentType
+                };
+
+                try {
+                    const res = await fetch("/api/product/add", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(productData)
+                    });
+                    const data = await res.json();
+
+                    if (res.ok) {
+                        // Product added successfully, close modal and refresh list or add to table
+                        modal.classList.remove("open"); // Hide modal
+                        // OPTION 1: Refresh the entire page (simplest)
+                        // window.location.href = "/home"; 
+
+                        // OPTION 2: Dynamically add the new product to the table (more advanced)
+                        addNewProductRow(data.product); // Call function to add row
+                        console.log("Product added:", data.product);
+                        
+                    } else {
+                        showModalError(data.error || "Failed to add product.");
+                    }
+                } catch (err) {
+                    console.error("Error adding product:", err);
+                    showModalError("Network error. Please check your connection.");
+                }
+            }
+
+            // Function to dynamically add a new product row to the table
+            function addNewProductRow(product) {
+                const tableBody = document.querySelector("#product-table tbody");
+                const rowCount = tableBody.rows.length;
+                const newRow = tableBody.insertRow();
+                newRow.id = `product-row-${product.id}`;
+                newRow.innerHTML = `
+                    <th scope="row">${rowCount + 1}</th>
+                    <td>${product.product_name}</td>
+                    <td>${product.product_quantity}</td>
+                    <td>${product.product_payment_type}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-warning view-product-btn" data-product-id="${product.id}">View</button>
+                        <button class="btn btn-sm btn-danger delete-product-btn" data-product-id="${product.id}">Delete</button>
+                    </td>
+                `;
+                // Re-attach event listeners to the new buttons
+                attachEventListenersToProductButtons(newRow.querySelector('.view-product-btn'));
+                attachEventListenersToProductButtons(newRow.querySelector('.delete-product-btn'));
+            }
+
+            // Function to handle product deletion
+            async function deleteProduct(productId) {
+                if (!confirm("Are you sure you want to delete this product?")) {
+                    return;
+                }
+
+                try {
+                    const res = await fetch(`/api/products/${productId}`, {
+                        method: "DELETE"
+                    });
+                    const data = await res.json();
+
+                    if (res.ok) {
+                        // Remove the row from the table
+                        const rowToRemove = document.getElementById(`product-row-${productId}`);
+                        if (rowToRemove) {
+                            rowToRemove.remove();
+                        }
+                        console.log(`Product ${productId} deleted.`);
+                    } else {
+                        alert(data.error || "Failed to delete product.");
+                    }
+                } catch (err) {
+                    console.error(`Error deleting product ${productId}:`, err);
+                    alert("Network error. Please check your connection.");
+                }
+            }
             
-          } else {
-            showError(data.error || "Something went wrong.");
-          }
-        } catch (err) {
-          showError("Network error. Please check your connection.");
-          console.error(err);
-        }
-      }
+            // --- Event Listeners ---
+            // Add listener for Enter key in modal inputs
+            document.querySelectorAll("#productModal input").forEach(input => {
+                input.addEventListener("keydown", (e) => {
+                    if (e.key === "Enter") {
+                        e.preventDefault();
+                        addProduct();
+                    }
+                });
+            });
+            document.getElementById("Product_payment_type").addEventListener("keydown", (e) => {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                    addProduct();
+                }
+            });
 
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") {
-          Addproduct();
-        }
-      });
+
+            // Function to attach event listeners to product table buttons
+            function attachEventListenersToProductButtons(button) {
+                if (button.classList.contains('delete-product-btn')) {
+                    button.addEventListener('click', () => {
+                        const productId = button.getAttribute('data-product-id');
+                        deleteProduct(productId);
+                    });
+                } else if (button.classList.contains('view-product-btn')) {
+                    button.addEventListener('click', () => {
+                        const productId = button.getAttribute('data-product-id');
+                        alert(`Viewing product ID: ${productId}`); // Placeholder for view functionality
+                    });
+                }
+            }
+
+            // Attach listeners to existing product buttons on page load
+            document.querySelectorAll('#product-table .view-product-btn, #product-table .delete-product-btn').forEach(attachEventListenersToProductButtons);
+
         </script>
     </body>
 </html>
