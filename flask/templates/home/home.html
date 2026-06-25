@@ -98,9 +98,9 @@
                     <span class="close-button" id="closeModalBtn">&times;</span>
                     <h2>Add Product</h2>
                     <div class="Product_section">
-                        <input type="text" id="Product_name" placeholder="Product Name" name="Product_name">
-                        <input type="number" id="Product_quantity" placeholder="Quantity" name="Product_quantity" value="1" min="1">
-                        <select id="Product_payment_type" name="Product_payment_type">
+                        <input type="text" id="ProductName" placeholder="Product Name" name="ProductName">
+                        <input type="number" id="ProductQuantity" placeholder="Quantity" name="ProductQuantity" value="1" min="1">
+                        <select id="ProductPaymentType" name="ProductPaymentType">
                             <option value="cash">Cash</option>
                             <option value="online">Online</option>
                             <option value="card">Card</option>
@@ -205,7 +205,7 @@
                     return;
                 }
 
-                const productData = {
+                const ProductSaleData = {
                     Product_name: productName,
                     Product_quantity: parseInt(productQuantity), // Ensure it's an integer
                     Product_payment_type: productPaymentType
@@ -217,7 +217,7 @@
                         headers: {
                             "Content-Type": "application/json"
                         },
-                        body: JSON.stringify(productData)
+                        body: JSON.stringify(ProductSaleData)
                     });
                     const data = await res.json();
 
