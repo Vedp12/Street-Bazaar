@@ -1,51 +1,80 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask import url_for
-import os # Import os for checking file existence
 
 db = SQLAlchemy()
+
 
 class Authentacation(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    shop_name = db.Column(db.String(250), nullable=False)
+    shopName = db.Column(db.String(250), nullable=False)
     password = db.Column(db.String(255), nullable=False)
+    avatar = db.Column(db.String(256), nullable=True)
 
-    avatar = db.Column(db.String(256), nullable=True)  # filename only
-
-    # Relationship to ProductData (one-to-many)
-    products = db.relationship('ProductData', backref='owner', lazy=True)
-
+    @property
     def avatar_url(self):
         if self.avatar:
-            # Ensure the file actually exists before generating URL
-            # This is a good practice, though not strictly required by Flask itself
-            # if os.path.exists(os.path.join('your_project', 'static', 'uploads', self.avatar)): # Adjust path if needed
-            return url_for('static', filename=f'uploads/{self.avatar}')
-        return None # Return None if no avatar
+            return url_for("static", filename=f"uploads/{self.avatar}")
+        return None
 
     def to_dict(self):
+        # FIX 6 — was referencing self.user_name / self.user_email / self.user_shop_name
+        # (none of these attributes exist); correct column names are name, email, shopName
         return {
             "id": self.id,
             "name": self.name,
             "email": self.email,
-            "shop_name": self.shop_name,
-            "avatar_url": self.avatar_url(), # Use a clearer key for frontend
+            "shop_name": self.shopName,
+            "avatar_url": self.avatar_url,
         }
 
-class ProductData(db.Model):
-    Product_id = db.Column(db.Integer, primary_key=True)
-    Product_name = db.Column(db.String(220), nullable=False)
-    Product_quantity = db.Column(db.Integer, nullable=False, default=1)
-    Product_payment_type = db.Column(db.String(40), nullable=False)
 
-    # Foreign Key to link products to users
-    user_id = db.Column(db.Integer, db.ForeignKey('authentacation.id'), nullable=False)
+class ProductData(db.Model):
+    __tablename__ = "Product_data"
+
+    ProductId = db.Column(db.Integer, primary_key=True)
+    ProductName = db.Column(db.String(220), nullable=False)
+    ProductCompany = db.Column(db.String(200), nullable=True)
+    ProductPrice = db.Column(db.Integer, nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("authentacation.id"), nullable=False)
+
+    product_sales = db.relationship("ProductSaleData", backref="product")
 
     def to_dict(self):
         return {
-            "id": self.Product_id, # Consistent ID key
-            "product_name": self.Product_name, # Use snake_case for consistency
-            "product_quantity": self.Product_quantity,
-            "product_payment_type": self.Product_payment_type,
+            "id": self.ProductId,
+            "name": self.ProductName,
+            "company": self.ProductCompany,
+            "price": self.ProductPrice,
+        }
+
+
+class ClientData(db.Model):
+    __tablename__ = "Client_data"
+
+    ClientId = db.Column(db.Integer, primary_key=True)
+    ClientName = db.Column(db.String(120), nullable=False)
+    ClientNo = db.Column(db.Integer)
+    user_id = db.Column(db.Integer, db.ForeignKey("authentacation.id"), nullable=False)
+
+
+class ProductSaleData(db.Model):
+    __tablename__ = "Product_Sale_data"
+
+    ProductSaleId = db.Column(db.Integer, primary_key=True)
+    ProductQuantity = db.Column(db.Integer, nullable=False, default=1)
+    ProductPaymentType = db.Column(db.String(50), nullable=False)
+    IsPaymentPending = db.Column(db.String(10))
+
+    product_id = db.Column(db.Integer, db.ForeignKey("Product_data.ProductId"))
+    user_id = db.Column(db.Integer, db.ForeignKey("authentacation.id"), nullable=False)
+
+    def to_dict(self):
+        return {
+            "id": self.ProductSaleId,
+            "product_quantity": self.ProductQuantity,
+            "product_payment_type": self.ProductPaymentType,
+            "is_payment_pending": self.IsPaymentPending,
+            "product_id": self.product_id,
         }
