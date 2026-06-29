@@ -48,6 +48,12 @@ class ProductData(db.Model):
             "company": self.ProductCompany,
             "price": self.ProductPrice,
         }
+    @property
+    def id(self):
+        return self.ProductId
+    @property
+    def ProductName(self):
+        return self.ProductName
 
 
 class ClientData(db.Model):
@@ -78,3 +84,9 @@ class ProductSaleData(db.Model):
             "is_payment_pending": self.IsPaymentPending,
             "product_id": self.product_id,
         }
+    @property
+    def id(self):
+        return self.ProductSaleId
+    @property
+    def ProductName(self):
+        return self.ProductName

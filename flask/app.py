@@ -38,7 +38,7 @@ app.config["MAX_CONTENT_LENGTH"] = 4 * 1024 * 1024
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.config["SESSION_COOKIE_HTTPONLY"] = True
 app.config["SESSION_COOKIE_SECURE"] = False  # Flip to True when on HTTPS
-
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 
 db.init_app(app)
