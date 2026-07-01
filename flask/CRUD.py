@@ -35,7 +35,10 @@ with app.app_context():
 
 
 #! Backend
-# ^ Post -> add Shelf
+# *Shelf----------------------------------------------------------------------------------------
+
+
+# TODO Post -> add Shelf
 @app.route("/shelf", methods=["POST"])
 def create_shelf():
     data = request.get_json()
@@ -45,83 +48,7 @@ def create_shelf():
     return jsonify({"Sucess": f"shelf saved to DB at id {shelf.id}"}), 201
 
 
-# ^ Post -> add book
-@app.route("/shelf/book", methods=["POST"])
-def create_book():
-    data = request.get_json()
-    shelf = shelfs.query.get(data["shelf_id"])
-    if shelf is None:
-        return jsonify({"error": "Shelf ID did not find "}), 404
-
-    book = books(
-        title=data["title"],
-        price=data["price"],
-        pages=data["pages"],
-        shelf_id=data["shelf_id"],
-    )
-    db.session.add(book)
-    db.session.commit()
-    return jsonify({"Sucess": f"shelf saved at DB "})
-
-
-# ^ Patch -> change each attribute of book
-@app.route("/shelf/book", methods=["PATCH"])
-def PATCH_book(id):
-
-    Book = books.query.get(id)
-    if Book is None:
-        return jsonify({"error": "Book ID did not find "}), 404
-
-    data = request.get_json()
-
-    if "title" in data:
-        Book.title = data["title"]
-    if "pages" in data:
-        Book.pages = data["pages"]
-    if "price" in data:
-        Book.price = data["price"]
-    db.session.commit()
-    return jsonify(
-        {
-            "update": "Book data updated successfully",
-            "Book": {
-                "id": Book.id,
-                "title": Book.title,
-                "price": Book.price,
-                "pages": Book.pages,
-            },
-        }
-    )
-
-
-# ^ Get -> all Shelf
-@app.route("/shelf", methods=["GET"])
-def get_Allshelf():
-    Shelfs = shelfs.query.all()
-    allShelf = []
-    if Shelfs:
-        for Shelf in Shelfs:
-            allShelf.append(
-                {
-                    "book": [
-                        {
-                            "id": Book.id,
-                            "title": Book.title,
-                            "price": Book.price,
-                            "pages": Book.pages,
-                        }
-                        for Book in Shelf.book
-                    ],
-                    "id": Shelf.id,
-                    "name": Shelf.name,
-                }
-            )
-        return jsonify(allShelf), 200
-    else:
-        return {"error": "ID not found"}, 404
-
-
-# ^ Get -> shelf by id
+# TODO Get -> shelf by id
 @app.route("/shelf/<int:id>", methods=["GET"])
 def get_shelf(id):
     Shelf = shelfs.query.get(id)
@@ -145,17 +72,114 @@ def get_shelf(id):
         return {"error": "Shelf's ID not found"}, 404
 
 
-# ^ Get -> all book and filter
+# TODO Get -> all Shelf
+@app.route("/shelf", methods=["GET"])
+def get_Allshelf():
+    Shelfs = shelfs.query.all()
+    # total = sum(Shelfs.book)
+    allShelf = []
+    if Shelfs:
+        for Shelf in Shelfs:
+            allShelf.append(
+                {
+                    "book": [
+                        {
+                            "id": Book.id,
+                            "title": Book.title,
+                            "price": Book.price,
+                            "pages": Book.pages,
+                        }
+                        for Book in (Shelf.book)
+                    ],
+                    "id": Shelf.id,
+                    "name": Shelf.name,
+                    "total": len(Shelf.book),
+                }
+            )
+        return jsonify(allShelf), 200
+    else:
+        return {"error": "ID not found"}, 404
+
+
+# *Book----------------------------------------------------------------------------------------
+
+
+# TODO Post -> add book
+@app.route("/shelf/book", methods=["POST"])
+def create_book():
+    data = request.get_json()
+    shelf = shelfs.query.get(data["shelf_id"])
+    if shelf is None:
+        return jsonify({"error": "Shelf ID did not find "}), 404
+    book = books(
+        title=data["title"],
+        price=data["price"],
+        pages=data["pages"],
+        shelf_id=data["shelf_id"],
+    )
+    db.session.add(book)
+    db.session.commit()
+    return jsonify({"Sucess": f"shelf saved at DB "})
+
+
+# TODO Patch -> change each attribute of book by id
+@app.route("/shelf/book/<int:id>", methods=["PATCH"])
+def PATCH_book(id):
+
+    Book = books.query.get(id)
+    if Book is None:
+        return jsonify({"error": "Book ID did not find "}), 404
+    data = request.get_json()
+    if "title" in data:
+        Book.title = data["title"]
+    if "pages" in data:
+        Book.pages = data["pages"]
+    if "price" in data:
+        Book.price = data["price"]
+    db.session.commit()
+    return jsonify({"Update": f"Data at ID {Book.id} updated"})
+
+
+# TODO Put -> Change all attribute by id
+@app.route("/shelf/book/<int:id>", methods=["PUT"])
+def PUT_book(id):
+    Book = books.query.get(id)
+    data = request.get_json()
+    if Book:
+        Book.title = data.get("title", Book.title)
+        Book.price = data.get("price", Book.price)
+        Book.pages = data.get("pages", Book.pages)
+        db.session.commit()
+        return jsonify({"Update": f"Data at ID {Book.id} updated"})
+    else:
+        return jsonify({"error": "Book ID did not find "}), 404
+
+
+# TODO Delete -> Delete data by id
+@app.route("/shelf/book/<int:id>", methods=["DELETE"])
+def DELETE_book(id):
+    Book = books.query.get(id)
+    if Book:
+        db.session.delete(Book)
+        db.session.commit()
+        return jsonify({"Message": "Id deleted successfully!"})
+    else:
+        return jsonify({"Error": "Id does not exist"})
+
+
+# TODO Get ->  book by filter
 @app.route("/shelf/book", methods=["GET"])
 def get_book():
     MINprice = request.args.get("MINprice", type=int)
     MAXprice = request.args.get("MAXprice", type=int)
-
+    title_contains = request.args.get("title_contains", type=str)
     query = books.query
     if MINprice is not None:
         query = query.filter(books.price >= MINprice)
     if MAXprice is not None:
         query = query.filter(books.price <= MAXprice)
+    if title_contains is not None:
+        query = query.filter(books.title.ilike(f"%{title_contains}%"))
 
     booklist = query.all()
     return jsonify(
@@ -173,7 +197,7 @@ def get_book():
     )
 
 
-# ^ Get -> book by id
+# TODO Get -> book by id
 @app.route("/shelf/book/<int:id>", methods=["GET"])
 def get_Allbook(id):
     Book = books.query.get(id)
@@ -190,5 +214,4 @@ def get_Allbook(id):
         return jsonify({"Error": "Book's Id not found"}), 404
 
 
-# ^ Get -> Book filter by id
 app.run(debug=True)
