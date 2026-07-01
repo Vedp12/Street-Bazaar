@@ -154,6 +154,7 @@ def api_logout():
     session.clear()
     return jsonify({"message": "Logged out"}), 200
 
+
 # ^Add Product--------------------------------------------------------------------------------------------------------------------
 @app.route("/api/product/add", methods=["POST"])
 def api_add_product():
